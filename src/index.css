@@ -71,6 +71,13 @@
 }
 
 @layer components {
+  /* Picture-frame card: white mat around the image, gold hairline, saffron on hover/focus */
+  .card {
+    @apply bg-white rounded-[20px] p-2 ring-1 ring-gold/25 shadow-soft transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift hover:ring-saffron-400/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-saffron-500;
+  }
+  .card-media {
+    @apply relative overflow-hidden rounded-[14px] bg-cream-200;
+  }
   .btn {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-[0.95rem] whitespace-nowrap border-[1.5px] border-transparent transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-0.5 active:translate-y-0;
   }

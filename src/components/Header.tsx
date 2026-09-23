@@ -15,8 +15,11 @@ import {
   BookOpen,
   Calendar,
   Image,
+  ChevronDown,
+  Music2,
 } from 'lucide-react';
 import { NAV_LINKS, SITE, IMAGES, LIVE_KATHA_YT, ytWatch } from '@/data/content';
+import { EKADASHI_HASH } from '@/components/EkadashiKirtan';
 
 const SOCIALS = [
   { href: SITE.social.youtube, label: 'YouTube', Icon: Youtube },
@@ -108,20 +111,41 @@ export default function Header() {
           </Link>
 
           <nav aria-label="Main" className="hidden xl:flex items-center">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                aria-current={isActive(link.path) ? 'page' : undefined}
-                className={`relative px-3 py-2 text-[0.92rem] font-medium rounded-[10px] transition-colors ${
-                  isActive(link.path)
-                    ? 'text-brand-deep bg-brand-soft'
-                    : 'text-ink-600 hover:bg-brand-soft hover:text-brand-deep'
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const item = (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  aria-current={isActive(link.path) ? 'page' : undefined}
+                  className={`relative inline-flex items-center gap-1 px-3 py-2 text-[0.92rem] font-medium rounded-[10px] transition-colors ${
+                    isActive(link.path)
+                      ? 'text-brand-deep bg-brand-soft'
+                      : 'text-ink-600 hover:bg-brand-soft hover:text-brand-deep'
+                  }`}
+                >
+                  {link.label}
+                  {link.path === '/events' && <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" aria-hidden />}
+                </Link>
+              );
+              if (link.path !== '/events') return item;
+              // Events dropdown: opens on hover and on keyboard focus (Tab from "Events" into the menu)
+              return (
+                <div key={link.path} className="group relative">
+                  {item}
+                  <div className="absolute left-0 top-full pt-2 invisible opacity-0 translate-y-1 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-[opacity,transform,visibility] duration-200">
+                    <div className="min-w-[210px] bg-white rounded-[14px] p-1.5 ring-1 ring-gold/25 shadow-lift">
+                      <Link to="/events" className="block px-3 py-2 rounded-[10px] text-[0.9rem] text-ink-600 hover:bg-brand-soft hover:text-brand-deep">
+                        Upcoming events
+                      </Link>
+                      <Link to={{ hash: EKADASHI_HASH }} className="flex items-center gap-2 px-3 py-2 rounded-[10px] text-[0.9rem] text-ink-600 hover:bg-brand-soft hover:text-brand-deep">
+                        <Music2 className="w-4 h-4 text-saffron-500" aria-hidden />
+                        Ekadashi Kirtan
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </nav>
 
           <div className="flex items-center gap-2.5">
@@ -184,7 +208,23 @@ export default function Header() {
               >
                 {link.label}
               </Link>
-            ))}
+            )).flatMap((el, i) =>
+              NAV_LINKS[i].path === '/events'
+                ? [
+                    el,
+                    <Link
+                      key="ekadashi"
+                      to={{ hash: EKADASHI_HASH }}
+                      onClick={() => setMobileOpen(false)}
+                      tabIndex={mobileOpen ? undefined : -1}
+                      className="flex items-center gap-2 pl-9 pr-5 py-3.5 border-b border-ink-800/10 text-[0.95rem] text-ink-600"
+                    >
+                      <Music2 className="w-4 h-4 text-saffron-500" aria-hidden />
+                      Ekadashi Kirtan
+                    </Link>,
+                  ]
+                : [el],
+            )}
           </nav>
           <div className="p-5">
             <Link to="/donate-us" tabIndex={mobileOpen ? undefined : -1} className="btn-saffron w-full mb-3">

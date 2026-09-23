@@ -64,15 +64,15 @@ export default function VideoGallery({ items, searchPlaceholder, pageSize = 12 }
 
       <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filtered.slice(0, shown).map((v) => (
-          <li key={v.id} className="group bg-white rounded-2xl overflow-hidden shadow-soft border border-gold/15 flex flex-col hover:-translate-y-1 hover:shadow-lift transition-all duration-300 animate-fade-in">
-            <button onClick={() => setPlaying(v)} className="relative aspect-video overflow-hidden bg-ink-900" aria-label={`Play ${v.title}`}>
-              <img src={ytThumb(v.yt)} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+          <li key={v.id} className="group card flex flex-col animate-fade-in">
+            <button onClick={() => setPlaying(v)} className="card-media aspect-video bg-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-saffron-500" aria-label={`Play ${v.title}`}>
+              <img src={ytThumb(v.yt)} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700" />
               <span className="absolute inset-0 bg-ink-900/20 group-hover:bg-ink-900/40 transition-colors" />
               <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[54px] h-[54px] rounded-full bg-saffron-500/95 shadow-[0_6px_18px_-6px_rgba(232,137,43,.9)] flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Play className="w-6 h-6 text-white ml-0.5" fill="currentColor" />
               </span>
             </button>
-            <div className="p-4 flex flex-col flex-1 gap-3">
+            <div className="px-2.5 pt-3.5 pb-2 flex flex-col flex-1 gap-3">
               <p className="text-[0.95rem] font-medium text-ink-800 leading-snug line-clamp-3">{v.title}</p>
               <div className="flex gap-2 mt-auto">
                 {share(v.yt, v.title).map(({ label, Icon, href }) => (

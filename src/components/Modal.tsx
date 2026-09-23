@@ -29,6 +29,11 @@ export default function Modal({ open, onClose, label, children, className = '' }
       ref={ref}
       aria-label={label}
       onClose={onClose}
+      // Escape fires "cancel", and Chrome doesn't always follow it with "close"; let state do the closing
+      onCancel={(e) => {
+        e.preventDefault();
+        onClose();
+      }}
       onClick={(e) => e.target === ref.current && onClose()}
       className={`bg-transparent p-0 m-auto w-[min(960px,calc(100vw-2rem))] max-h-[calc(100dvh-2rem)] overflow-visible ${className}`}
     >

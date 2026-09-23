@@ -15,8 +15,10 @@ import PreviousEvents from '@/pages/PreviousEvents';
 import Bhajan from '@/pages/Bhajan';
 import Gallery from '@/pages/Gallery';
 import Contact from '@/pages/Contact';
+import NitaiDas from '@/pages/NitaiDas';
 import Donate from '@/pages/Donate';
 import NotFound from '@/pages/NotFound';
+import EkadashiKirtan from '@/components/EkadashiKirtan';
 
 // Fades up every section's content container (and anything marked data-reveal) as it scrolls into view.
 function ScrollReveal() {
@@ -83,6 +85,7 @@ function Shell() {
               <Route path="/previous-event" element={<PreviousEvents />} />
               <Route path="/bhajan" element={<Bhajan />} />
               <Route path="/photos" element={<Gallery />} />
+              <Route path="/shri-nitai-das-ji-maharaj" element={<NitaiDas />} />
               <Route path="/contact-us" element={<Contact />} />
               <Route path="/donate-us" element={<Donate />} />
               <Route path="*" element={<NotFound />} />
@@ -92,6 +95,7 @@ function Shell() {
       </main>
       <Footer />
       <BackToTop />
+      <EkadashiKirtan />
     </div>
   );
 }

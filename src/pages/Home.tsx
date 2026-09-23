@@ -18,6 +18,7 @@ import {
 import SectionHeading from '@/components/SectionHeading';
 import EventCard from '@/components/EventCard';
 import VideoGallery from '@/components/VideoGallery';
+import { EkadashiKirtanButton } from '@/components/EkadashiKirtan';
 import { usePageTitle } from '@/lib/usePageTitle';
 import {
   IMAGES,
@@ -230,6 +231,7 @@ export default function Home() {
   return (
     <div>
       <HeroSlider />
+      <EkadashiKirtanButton />
 
       {/* QUICK STRIP */}
       <section className="bg-brand text-white">

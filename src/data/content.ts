@@ -66,6 +66,7 @@ export const NAV_LINKS = [
   { label: 'Events', path: '/events' },
   { label: 'Bhajan', path: '/bhajan' },
   { label: 'Gallery', path: '/photos' },
+  { label: 'Shri Nitai Das Ji Maharaj', path: '/shri-nitai-das-ji-maharaj' },
   { label: 'Contact Us', path: '/contact-us' },
 ];
 
@@ -73,3 +74,12 @@ export const ytThumb = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.j
 export const ytEmbed = (id: string) => `https://www.youtube.com/embed/${id}?autoplay=1`;
 export const ytWatch = (id: string) => `https://www.youtube.com/watch?v=${id}`;
 export const mapsDir = (place: string) => `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(place)}`;
+
+// Web app URL of apps-script/ekadashi-kirtan.gs deployed on the ashram's own Google Sheet (…/exec).
+// GET returns the list; POST {action:'add', id, password, entry} appends a row after checking the Users tab.
+export const EKADASHI_SHEET_URL =
+  'https://script.google.com/macros/s/AKfycbz2Jhrd_-nLn6Krfo922ST4H8GrWAkZ0Me6mei8xYLhBvCSNiFiEAotYbpyppnQb1Hoow/exec';
+
+// Apps Script web app behind gaurkripadham.netlify.app/ShriNitaiDasJiMaharaj_Playlist; GET returns { kathas, videos }.
+export const NITAI_DAS_SHEET_URL =
+  'https://script.google.com/macros/s/AKfycbzewZ_kCtIFbmkA5N2-_X2B1uyCgs_f7cn0f1VNLoS0c7f5e9gDnIgzrJ9rl3I_039LFw/exec';
