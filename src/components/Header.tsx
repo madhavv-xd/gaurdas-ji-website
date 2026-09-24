@@ -19,7 +19,7 @@ import {
   Music2,
 } from 'lucide-react';
 import { NAV_LINKS, SITE, IMAGES, LIVE_KATHA_YT, ytWatch } from '@/data/content';
-import { EKADASHI_HASH } from '@/components/EkadashiKirtan';
+import { EKADASHI_PATH } from '@/components/EkadashiKirtan';
 
 const SOCIALS = [
   { href: SITE.social.youtube, label: 'YouTube', Icon: Youtube },
@@ -137,9 +137,9 @@ export default function Header() {
                       <Link to="/events" className="block px-3 py-2 rounded-[10px] text-[0.9rem] text-ink-600 hover:bg-brand-soft hover:text-brand-deep">
                         Upcoming events
                       </Link>
-                      <Link to={{ hash: EKADASHI_HASH }} className="flex items-center gap-2 px-3 py-2 rounded-[10px] text-[0.9rem] text-ink-600 hover:bg-brand-soft hover:text-brand-deep">
+                      <Link to={EKADASHI_PATH} className="flex items-center gap-2 px-3 py-2 rounded-[10px] text-[0.9rem] text-ink-600 hover:bg-brand-soft hover:text-brand-deep">
                         <Music2 className="w-4 h-4 text-saffron-500" aria-hidden />
-                        Ekadashi Kirtan
+                        Ekadashi Kirtan List
                       </Link>
                     </div>
                   </div>
@@ -214,13 +214,13 @@ export default function Header() {
                     el,
                     <Link
                       key="ekadashi"
-                      to={{ hash: EKADASHI_HASH }}
+                      to={EKADASHI_PATH}
                       onClick={() => setMobileOpen(false)}
                       tabIndex={mobileOpen ? undefined : -1}
                       className="flex items-center gap-2 pl-9 pr-5 py-3.5 border-b border-ink-800/10 text-[0.95rem] text-ink-600"
                     >
                       <Music2 className="w-4 h-4 text-saffron-500" aria-hidden />
-                      Ekadashi Kirtan
+                      Ekadashi Kirtan List
                     </Link>,
                   ]
                 : [el],

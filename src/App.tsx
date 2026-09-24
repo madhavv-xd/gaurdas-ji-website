@@ -18,7 +18,8 @@ import Contact from '@/pages/Contact';
 import NitaiDas from '@/pages/NitaiDas';
 import Donate from '@/pages/Donate';
 import NotFound from '@/pages/NotFound';
-import EkadashiKirtan from '@/components/EkadashiKirtan';
+import EkadashiKirtanList from '@/pages/EkadashiKirtanList';
+import EkadashiKirtanAdmin from '@/pages/EkadashiKirtanAdmin';
 
 // Fades up every section's content container (and anything marked data-reveal) as it scrolls into view.
 function ScrollReveal() {
@@ -88,6 +89,8 @@ function Shell() {
               <Route path="/shri-nitai-das-ji-maharaj" element={<NitaiDas />} />
               <Route path="/contact-us" element={<Contact />} />
               <Route path="/donate-us" element={<Donate />} />
+              <Route path="/ekadashi-kirtan-list" element={<EkadashiKirtanList />} />
+              <Route path="/ekadashikirtanAdmin" element={<EkadashiKirtanAdmin />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </ErrorBoundary>
@@ -95,7 +98,6 @@ function Shell() {
       </main>
       <Footer />
       <BackToTop />
-      <EkadashiKirtan />
     </div>
   );
 }

@@ -76,9 +76,9 @@ export const ytWatch = (id: string) => `https://www.youtube.com/watch?v=${id}`;
 export const mapsDir = (place: string) => `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(place)}`;
 
 // Web app URL of apps-script/ekadashi-kirtan.gs deployed on the ashram's own Google Sheet (…/exec).
-// GET returns the list; POST {action:'add', id, password, entry} appends a row after checking the Users tab.
+// GET returns the list; POST {action:'login'|'add'|'update'|'delete', id, password, …} is checked against the Users tab.
 export const EKADASHI_SHEET_URL =
-  'https://script.google.com/macros/s/AKfycbz2Jhrd_-nLn6Krfo922ST4H8GrWAkZ0Me6mei8xYLhBvCSNiFiEAotYbpyppnQb1Hoow/exec';
+  'https://script.google.com/macros/s/AKfycbwumtGsmFpd55LCEn6qMtLbT2isS9_IObpsfIrvmXri_1aZ1OrLWr0p_I1zBiyb0ziyIg/exec';
 
 // Apps Script web app behind gaurkripadham.netlify.app/ShriNitaiDasJiMaharaj_Playlist; GET returns { kathas, videos }.
 export const NITAI_DAS_SHEET_URL =
