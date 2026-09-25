@@ -97,7 +97,7 @@ export default function Contact() {
                 </a>
               </div>
 
-              <div className="bg-gradient-warm rounded-2xl p-6 text-white">
+              <div className="bg-saffron-500 rounded-2xl p-6 text-white">
                 <Heart className="w-8 h-8 mb-3" fill="currentColor" />
                 <h3 className="font-serif-display text-lg mb-1">Join our WhatsApp Channel</h3>
                 <p className="text-sm text-white/90 mb-4">Stay connected for katha updates.</p>

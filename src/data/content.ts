@@ -9,11 +9,16 @@ import kathaPortrait from '@/assets/aboutkathagaurdasji.jpeg';
 import about1 from '@/assets/About1.jpeg';
 import about2 from '@/assets/About2.jpeg';
 import about3 from '@/assets/About3.jpeg';
-import parampara1 from '@/assets/Image1.jpeg';
 import parampara2 from '@/assets/Image2.jpeg';
 import parampara3 from '@/assets/Image3.jpeg';
 import parampara4 from '@/assets/Image4.jpeg';
 import parampara5 from '@/assets/Image5.jpeg';
+import guru1 from '@/assets/guru1_radharaman_3d.webp';
+import guru2 from '@/assets/guru2_navdweep_chandra_das_3d.webp';
+import guru3 from '@/assets/guru3_lalitadasi_3d.webp';
+import guru4 from '@/assets/guru4_ramdas_babaji_3d.webp';
+import guru5 from '@/assets/guru5_gaurangdas_babaji_3d.webp';
+import guru6 from '@/assets/guru6_chandrashekhardas_babaji_3d.webp';
 
 export * from './live';
 
@@ -53,8 +58,19 @@ export const IMAGES = {
   about: [about1, about2, about3],
 };
 
-// Guru parampara charts, in the order the live site shows them (Image5, Image4, Image1, Image3); Image2 is the teaser art
-export const PARAMPARA_IMAGES = [parampara5, parampara4, parampara1, parampara3];
+// Guru parampara charts, in the live site's order (Image5, Image4, Image3); Image2 is the teaser art.
+// The live site's gurus chart (Image1, between the 2nd and 3rd) is replaced by GURUS, shown as its own card there.
+export const PARAMPARA_IMAGES = [parampara5, parampara4, parampara3];
+
+// श्री गुरुवर्ग, in order: shown two per row (1–2, 3–4, 5–6). Each image already carries its caption.
+export const GURUS = [
+  { image: guru1, name: 'परमेष्ठी गुरुदेव श्रीमद् राधारमण चरणदासदेव (बड़े बाबा जी)' },
+  { image: guru2, name: 'बड़े बाबाजी के प्रथम शिष्य श्री नवद्वीप चंद्र दास बाबा जी' },
+  { image: guru3, name: 'श्रीमती ललितादासी (सखी माँ जी)' },
+  { image: guru4, name: 'परात्पर गुरुदेव नामाचार्य श्रीपाद रामदास बाबाजी महाराज' },
+  { image: guru5, name: 'परम गुरुदेव रसिकाचार्य श्रीपाद गौरांगदास बाबाजी महाराज' },
+  { image: guru6, name: 'सदगुरुदेव श्रीपाद चन्द्रशेखरदास बाबाजी महाराज' },
+];
 export const PARAMPARA_TEASER = parampara2;
 
 // Paths match gaurdasjimaharaj.in so existing links keep working

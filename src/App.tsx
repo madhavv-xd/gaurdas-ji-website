@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Routes, Route, useLocation } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import BackToTop from '@/components/BackToTop';
@@ -104,12 +104,11 @@ function Shell() {
   );
 }
 
+// A data router (not <BrowserRouter>) so <Link viewTransition> works; the pages' own <Routes> stay in Shell.
+const router = createBrowserRouter([{ path: '*', element: <Shell /> }]);
+
 function App() {
-  return (
-    <BrowserRouter>
-      <Shell />
-    </BrowserRouter>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

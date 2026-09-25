@@ -32,12 +32,12 @@ export default function Kathas() {
               const videos = VIDEOS.filter((v) => ids.has(v.kathaId)).length;
               const upcoming = kathas.filter((k) => k.status === 'upcoming').length;
               return (
-                <Link key={c.id} to={`/katha-details/${c.id}`} data-reveal className="group card flex flex-col">
+                <Link key={c.id} to={`/katha-details/${c.id}`} viewTransition data-reveal className="group card flex flex-col">
                   {/* posters are 304×384; keep that ratio so the artwork's own title is never cropped */}
                   <div className="card-media aspect-[304/384]">
-                    <img src={c.image} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700" />
+                    <img src={c.image} alt="" loading="lazy" decoding="async" style={{ viewTransitionName: `katha-${c.id}` }} className="[view-transition-class:hero-morph] w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700" />
                     {upcoming > 0 && (
-                      <span className="absolute top-3 left-3 bg-saffron-500 text-white text-[0.72rem] font-semibold px-3 py-1 rounded-full shadow-[0_6px_14px_-6px_rgba(232,137,43,.9)]">
+                      <span className="absolute top-3 left-3 bg-saffron-500 text-white text-[0.72rem] font-semibold px-3 py-1 rounded-full">
                         {upcoming} upcoming
                       </span>
                     )}
@@ -66,7 +66,7 @@ export default function Kathas() {
       <section className="py-16 bg-ink-800 relative overflow-hidden">
         <div className="absolute inset-0 bg-hero-pattern opacity-20" />
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-warm flex items-center justify-center mx-auto mb-5 shadow-lg">
+          <div className="w-16 h-16 rounded-2xl bg-saffron-500 flex items-center justify-center mx-auto mb-5">
             <BookOpen className="w-8 h-8 text-white" />
           </div>
           <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl text-white leading-tight text-balance mb-3">

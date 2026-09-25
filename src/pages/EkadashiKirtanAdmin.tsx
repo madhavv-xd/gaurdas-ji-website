@@ -99,7 +99,7 @@ function Editor({ creds, onLogout }: { creds: Creds; onLogout: () => void }) {
   }
 
   const popup = notice && (
-    <div role="status" className="fixed bottom-6 right-6 z-[300] flex items-start gap-3 max-w-[min(420px,calc(100vw-3rem))] p-4 rounded-xl bg-white ring-1 ring-gold/30 shadow-lift">
+    <div key={notice} role="status" className="animate-fade-up fixed bottom-6 right-6 z-[300] flex items-start gap-3 max-w-[min(420px,calc(100vw-3rem))] p-4 rounded-xl bg-white ring-1 ring-gold/30 shadow-lift">
       <CheckCircle2 className="w-5 h-5 shrink-0 text-forest-600" aria-hidden />
       <p className="text-sm text-ink-700">{notice}</p>
       <button onClick={() => setNotice('')} className="shrink-0 text-ink-400 hover:text-ink-700" aria-label="Dismiss">

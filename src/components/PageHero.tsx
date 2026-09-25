@@ -11,16 +11,21 @@ interface PageHeroProps {
   crumbs?: { label: string; to: string }[];
   // browser tab title, when it should differ from the heading
   docTitle?: string;
+  // view-transition-name shared with the card that links here, so its image grows into this hero
+  vtName?: string;
 }
 
-export default function PageHero({ title, subtitle, image, breadcrumb, crumbs = [], docTitle }: PageHeroProps) {
+export default function PageHero({ title, subtitle, image, breadcrumb, crumbs = [], docTitle, vtName }: PageHeroProps) {
   usePageTitle(docTitle ?? title);
 
   return (
     <section className="relative min-h-[380px] flex items-center overflow-hidden bg-ink-900">
-      <img src={image} alt="" className="absolute inset-0 w-full h-full object-cover animate-[heroZoom_9s_ease-out_both]" />
-      <div className="absolute inset-0 bg-[linear-gradient(100deg,rgba(11,30,43,.9)_0%,rgba(11,30,43,.55)_46%,rgba(11,30,43,.12)_100%)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(9,24,36,.6),transparent_34%)]" />
+      {/* image + tints move together in a view transition, so the hero never flashes undimmed */}
+      <div className="absolute inset-0 [view-transition-class:hero-morph]" style={vtName ? { viewTransitionName: vtName } : undefined}>
+        <img src={image} alt="" className="absolute inset-0 w-full h-full object-cover animate-[heroZoom_9s_ease-out_both]" />
+        <div className="absolute inset-0 bg-[linear-gradient(100deg,rgba(11,30,43,.9)_0%,rgba(11,30,43,.55)_46%,rgba(11,30,43,.12)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(9,24,36,.6),transparent_34%)]" />
+      </div>
       <div className="relative z-10 max-w-[1200px] w-full mx-auto px-[22px] py-20 text-white">
         <nav aria-label="Breadcrumb" className="mb-4 animate-fade-in">
           <ol className="flex flex-wrap items-center gap-1.5 text-xs text-[#ffd9a8]">

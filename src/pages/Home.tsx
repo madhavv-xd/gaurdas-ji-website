@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import SectionHeading from '@/components/SectionHeading';
 import EventCard from '@/components/EventCard';
+import GuruVarg from '@/components/GuruVarg';
 import VideoGallery from '@/components/VideoGallery';
 import { EkadashiDatesButton } from '@/components/EkadashiKirtan';
 import { usePageTitle } from '@/lib/usePageTitle';
@@ -246,7 +247,7 @@ export default function Home() {
               'group flex items-center gap-3.5 px-5 py-[22px] border-b sm:border-b-0 lg:border-r last:border-0 border-white/15 hover:bg-white/[.07] transition-colors';
             const inner = (
               <>
-                <span className="w-11 h-11 flex-none rounded-xl bg-white/15 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <span className="w-11 h-11 flex-none rounded-xl bg-white/15 flex items-center justify-center">
                   <Icon className="w-[22px] h-[22px]" />
                 </span>
                 <span>
@@ -277,7 +278,7 @@ export default function Home() {
             <div className="rich font-sanskrit text-ink-500 text-[1.02rem] mb-6" dangerouslySetInnerHTML={{ __html: aboutIntro }} />
             <div className="flex flex-wrap gap-3">
               <Link to="/about-shri-gaurdasji" className="btn-ink">
-                आगे पढ़े <ArrowRight className="w-4 h-4" />
+                आगे पढ़ें <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           </div>
@@ -289,9 +290,8 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-[22px]">
           <SectionHeading eyebrow="Guru Parampara" title="गुरु परम्परा" light />
           <div className="grid md:grid-cols-2 gap-6 max-w-[960px] mx-auto">
-            {PARAMPARA_IMAGES.slice(2).map((src, i) => (
-              <img key={src} src={src} alt="Guru parampara" loading="lazy" data-reveal style={d(i * 120)} className="w-full rounded-[18px] bg-white p-2 shadow-lift" />
-            ))}
+            <GuruVarg />
+            <img src={PARAMPARA_IMAGES[2]} alt="Guru parampara" loading="lazy" data-reveal style={d(60)} className="w-full rounded-[18px] bg-white p-2 shadow-lift" />
           </div>
           <div className="text-center mt-10">
             <Link to="/about-guru-ji" className="btn-saffron">
@@ -314,11 +314,12 @@ export default function Home() {
               <Link
                 key={c.id}
                 to={`/katha-details/${c.id}`}
-                className={`group relative rounded-[14px] overflow-hidden shadow-soft bg-cream-200 flex items-end hover:-translate-y-1 transition-transform duration-300 ${
+                viewTransition
+                className={`group relative rounded-[14px] overflow-hidden shadow-soft bg-cream-200 flex items-end hover:shadow-lift transition-shadow duration-300 ${
                   i === 0 ? 'sm:col-span-2 lg:row-span-2' : i === 3 ? 'sm:col-span-2' : ''
                 }`}
               >
-                <img src={c.image} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <img src={c.image} alt="" loading="lazy" style={{ viewTransitionName: `katha-${c.id}` }} className="[view-transition-class:hero-morph] absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700" />
                 <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(9,24,36,.9),rgba(9,24,36,.05)_62%)]" />
                 <span className="absolute top-3 left-3 z-10 text-white text-[0.68rem] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-saffron-500">
                   {KATHAS.filter((k) => k.categoryId === c.id).length} kathas
@@ -344,7 +345,7 @@ export default function Home() {
             <SectionHeading eyebrow="Events" title="All Upcoming Events" />
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-[18px] justify-center">
               {upcoming.slice(0, 4).map((k, i) => (
-                <div key={k.id} data-reveal style={d(i * 90)} className="flex">
+                <div key={k.id} data-reveal style={d(i * 60)} className="flex">
                   <EventCard katha={k} />
                 </div>
               ))}

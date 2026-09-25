@@ -22,6 +22,7 @@ export default function KathaDetail() {
         title={category.name}
         crumbs={[{ label: 'All Kathas', to: '/all-kathas' }]}
         image={category.image || IMAGES.heroKatha}
+        vtName={`katha-${category.id}`}
       />
 
       <section className="py-[52px] sm:py-[76px] bg-cream-50">
@@ -41,7 +42,7 @@ export default function KathaDetail() {
                 aria-selected={tab === key}
                 onClick={() => setTab(key)}
                 className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${
-                  tab === key ? 'bg-gradient-warm text-white shadow-lg' : 'bg-white text-ink-500 border border-ink-800/15 hover:border-saffron-300'
+                  tab === key ? 'bg-saffron-500 text-white' : 'bg-white text-ink-500 border border-ink-800/15 hover:border-saffron-300'
                 }`}
               >
                 {label} ({kathas.filter((k) => k.status === key).length})

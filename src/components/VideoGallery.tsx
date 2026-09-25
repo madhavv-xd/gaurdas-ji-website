@@ -68,7 +68,7 @@ export default function VideoGallery({ items, searchPlaceholder, pageSize = 12 }
             <button onClick={() => setPlaying(v)} className="card-media aspect-video bg-ink-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-saffron-500" aria-label={`Play ${v.title}`}>
               <img src={ytThumb(v.yt)} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700" />
               <span className="absolute inset-0 bg-ink-900/20 group-hover:bg-ink-900/40 transition-colors" />
-              <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[54px] h-[54px] rounded-full bg-saffron-500/95 shadow-[0_6px_18px_-6px_rgba(232,137,43,.9)] flex items-center justify-center group-hover:scale-110 transition-transform">
+              <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[54px] h-[54px] rounded-full bg-saffron-500/95 shadow-md flex items-center justify-center group-hover:scale-110 transition-transform">
                 <Play className="w-6 h-6 text-white ml-0.5" fill="currentColor" />
               </span>
             </button>

@@ -1,6 +1,6 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { CalendarDays, Loader2, Search, X, ArrowRight } from 'lucide-react';
+import { CalendarDays, Loader2, Search, X, ArrowRight, Clock, Phone } from 'lucide-react';
 import Modal from '@/components/Modal';
 import { EKADASHI_SHEET_URL } from '@/data/content';
 import { PERIODS, periodOf, startMinutes, type Period } from '@/lib/kirtanTime';
@@ -35,21 +35,43 @@ type EkadashiDate = { date: string; name: string }; // date = 'yyyy-MM-dd'
 // Local calendar date as 'yyyy-MM-dd', to compare with the sheet's dates as plain strings.
 const ymd = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
+const DATES_CACHE = 'ekadashi-dates-v1';
+
 // Floating home button: the next Ekadashi dates from the sheet's "Dates" tab.
 export function EkadashiDatesButton() {
   const [open, setOpen] = useState(false);
-  const [dates, setDates] = useState<EkadashiDate[] | null>(null);
+  // last dates this browser saw, shown at once while the fresh ones load
+  const [dates, setDates] = useState<EkadashiDate[] | null>(() => {
+    try {
+      return JSON.parse(localStorage.getItem(DATES_CACHE) ?? 'null');
+    } catch {
+      return null;
+    }
+  });
   const [error, setError] = useState('');
+  const fetched = useRef(false);
+  const hadDates = useRef(dates !== null);
 
   // Fetch only when first opened, so the home page doesn't wait on Apps Script.
   useEffect(() => {
-    if (!open || dates) return;
+    if (!open || fetched.current) return;
+    fetched.current = true;
     setError('');
     fetch(`${EKADASHI_SHEET_URL}?view=dates`)
       .then((r) => r.json())
-      .then((j) => setDates(j.dates ?? []))
-      .catch(() => setError('Could not load the dates. Check your connection and try again.'));
-  }, [open, dates]);
+      .then((j) => {
+        setDates(j.dates ?? []);
+        try {
+          localStorage.setItem(DATES_CACHE, JSON.stringify(j.dates ?? []));
+        } catch {
+          /* storage blocked: nothing to do */
+        }
+      })
+      .catch(() => {
+        fetched.current = false; // let the next open retry
+        if (!hadDates.current) setError('Could not load the dates. Check your connection and try again.');
+      });
+  }, [open]);
 
   const now = new Date();
   const today = ymd(now);
@@ -60,7 +82,7 @@ export function EkadashiDatesButton() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="fixed left-4 bottom-20 sm:bottom-6 z-[120] inline-flex items-center gap-2 pl-3 pr-4 py-2.5 rounded-full bg-gradient-warm text-white font-semibold text-[0.9rem] shadow-[0_10px_24px_-10px_rgba(232,137,43,.9)] ring-2 ring-white/70 hover:-translate-y-0.5 transition-transform focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-saffron-300"
+        className="fixed left-4 bottom-20 sm:bottom-6 z-[120] inline-flex items-center gap-2 pl-3 pr-4 py-2.5 rounded-full bg-saffron-500 hover:bg-saffron-600 text-white font-semibold text-[0.9rem] shadow-lift transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-saffron-300"
       >
         <CalendarDays className="w-5 h-5" aria-hidden />
         Upcoming Ekadashi Dates
@@ -198,6 +220,8 @@ function Select({ label, value, onChange, children }: { label: string; value: st
   );
 }
 
+const hiddenTag = <span className="ml-2 px-2 py-0.5 rounded-full bg-ink-800/10 text-ink-500 text-[0.7rem] font-semibold uppercase">Hidden</span>;
+
 // true = a serial-number column (1, 2, 3… within each table); false hides it.
 const SHOW_ROW_NUMBERS = true;
 
@@ -256,7 +280,8 @@ export function KirtanTables({ rows, error, action }: { rows: Row[] | null; erro
 
   return (
     <div>
-      <div className="mb-8 p-4 sm:p-5 rounded-xl bg-white ring-1 ring-gold/25 space-y-4">
+      {/* pinned below the header on large screens, where it's short enough not to crowd the list */}
+      <div className="mb-8 p-4 sm:p-5 rounded-xl bg-white ring-1 ring-gold/25 space-y-4 lg:sticky lg:top-[calc(var(--hdr,0px)+12px)] lg:z-30 lg:shadow-soft lg:transition-[top] lg:duration-300">
         <label className="relative block">
           <span className="sr-only">Search by name, address, city or state</span>
           <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-saffron-500" aria-hidden />
@@ -303,9 +328,18 @@ export function KirtanTables({ rows, error, action }: { rows: Row[] | null; erro
         {error ? (
           <p className="text-center text-ink-500 py-8">{error}</p>
         ) : !rows ? (
-          <p className="flex items-center justify-center gap-2 text-ink-500 py-8">
-            <Loader2 className="w-5 h-5 animate-spin text-saffron-500" aria-hidden /> Loading the list…
-          </p>
+          <div aria-live="polite">
+            <span className="sr-only">Loading the list…</span>
+            <div className="rounded-xl ring-1 ring-gold/25 bg-white divide-y divide-cream-200" aria-hidden>
+              {[0, 1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="flex gap-4 px-4 py-3.5">
+                  <span className="h-3.5 w-1/5 rounded bg-cream-200 animate-pulse motion-reduce:animate-none" />
+                  <span className="h-3.5 w-2/5 rounded bg-cream-200 animate-pulse motion-reduce:animate-none" />
+                  <span className="h-3.5 w-1/6 rounded bg-cream-200 animate-pulse motion-reduce:animate-none" />
+                </div>
+              ))}
+            </div>
+          </div>
         ) : shown.length === 0 ? (
           <p className="text-center text-ink-500 py-8">{filtered ? 'No kirtans match these filters.' : 'No kirtans listed yet.'}</p>
         ) : (
@@ -316,7 +350,32 @@ export function KirtanTables({ rows, error, action }: { rows: Row[] | null; erro
                   {gi + 1}. {heading} <span className="text-sm font-sans text-ink-400">({list.length})</span>
                 </h3>
               )}
-              <div className="overflow-x-auto rounded-xl ring-1 ring-gold/25 bg-white">
+              {/* phones: one card per kirtan instead of a sideways-scrolling table */}
+              <ul className="sm:hidden space-y-3">
+                {list.map((r, i) => (
+                  <li key={r._row || i} className="rounded-xl bg-white ring-1 ring-gold/25 p-4">
+                    <p className="font-semibold text-ink-800">
+                      {SHOW_ROW_NUMBERS && <span className="font-normal text-ink-400 mr-1.5">{i + 1}.</span>}
+                      {r.Name}
+                      {isHidden(r) && hiddenTag}
+                    </p>
+                    {r.Address && <p className="mt-1 text-sm text-ink-500">{r.Address}</p>}
+                    <p className="mt-2 text-sm text-ink-600">{[r.City, grouped ? '' : r.State, r.Country].filter(Boolean).join(', ')}</p>
+                    {r.Timings && (
+                      <p className="mt-1.5 flex items-center gap-1.5 text-sm font-medium text-brand-deep">
+                        <Clock className="w-4 h-4 shrink-0 text-saffron-500" aria-hidden /> {r.Timings}
+                      </p>
+                    )}
+                    {r.PhoneNumber && (
+                      <a href={`tel:${r.PhoneNumber.replace(/\s/g, '')}`} className="mt-1.5 inline-flex items-center gap-1.5 text-sm text-brand hover:underline">
+                        <Phone className="w-4 h-4 shrink-0" aria-hidden /> {r.PhoneNumber}
+                      </a>
+                    )}
+                    {action && <div className="mt-3 pt-3 border-t border-cream-200">{action(r)}</div>}
+                  </li>
+                ))}
+              </ul>
+              <div className="hidden sm:block overflow-x-auto rounded-xl ring-1 ring-gold/25 bg-white">
                 {/* fixed layout + shared widths so every state's table lines up */}
                 <table className="w-full min-w-[820px] table-fixed text-sm text-left">
                   <thead className="bg-saffron-50 text-ink-700">
@@ -335,7 +394,7 @@ export function KirtanTables({ rows, error, action }: { rows: Row[] | null; erro
                         {SHOW_ROW_NUMBERS && <td className="px-3 py-2 text-ink-400">{i + 1}</td>}
                         <td className="px-3 py-2 font-medium text-ink-800">
                           {r.Name}
-                          {isHidden(r) && <span className="ml-2 px-2 py-0.5 rounded-full bg-ink-800/10 text-ink-500 text-[0.7rem] font-semibold uppercase">Hidden</span>}
+                          {isHidden(r) && hiddenTag}
                         </td>
                         <td className="px-3 py-2">{r.Address}</td>
                         <td className="px-3 py-2 whitespace-nowrap">

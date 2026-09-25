@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   Menu,
@@ -39,14 +39,29 @@ const APP_BAR = [
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
+  // slides away while scrolling down, back on the first scroll up
+  const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    let last = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > 40);
+      if (Math.abs(y - last) < 8) return; // ignore jitter
+      setHidden(y > last && y > 400);
+      last = y;
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // --hdr = the space the header covers right now, so other sticky bars can sit just below it
+  useEffect(() => {
+    document.documentElement.style.setProperty('--hdr', hidden ? '0px' : `${headerRef.current?.offsetHeight ?? 0}px`);
+  }, [hidden]);
 
   useEffect(() => {
     setMobileOpen(false);
@@ -100,13 +115,19 @@ export default function Header() {
 
       {/* Sticky nav */}
       <header
-        className={`sticky top-0 z-50 bg-cream-50/95 backdrop-blur-md border-b border-ink-800/10 transition-shadow duration-200 ${
+        ref={headerRef}
+        className={`sticky top-0 z-50 bg-cream-100/95 backdrop-blur-md border-b border-ink-800/10 transition-[transform,box-shadow] duration-300 ease-out focus-within:translate-y-0 ${
           scrolled ? 'shadow-[0_8px_26px_-18px_rgba(16,43,61,.5)]' : ''
-        }`}
+        } ${hidden && !mobileOpen ? '-translate-y-full' : ''}`}
       >
         <div className="max-w-[1200px] mx-auto px-[22px] py-2.5 flex items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-2 group flex-none" aria-label={`${SITE.name}, home`}>
-            <img src={IMAGES.logo} alt="" width={56} height={56} className="w-12 h-12 sm:w-14 sm:h-14 object-contain group-hover:scale-105 transition-transform" />
+          {/* logo shrinks by transform once scrolled, so the header's height (and the page) doesn't jump */}
+          <Link
+            to="/"
+            className={`flex items-center gap-2 flex-none origin-left transition-transform duration-300 ${scrolled ? 'scale-[.88]' : ''}`}
+            aria-label={`${SITE.name}, home`}
+          >
+            <img src={IMAGES.logo} alt="" width={56} height={56} className="w-12 h-12 sm:w-14 sm:h-14 object-contain" />
             <img src={IMAGES.wordmark} alt="" className="h-10 sm:h-12 w-auto object-contain" />
           </Link>
 
@@ -132,7 +153,8 @@ export default function Header() {
               // The trigger is a button, not a link, so clicking it keeps you on the current page.
               return (
                 <div key={link.path} className="group relative">
-                  <button type="button" aria-haspopup="true" className={item.props.className}>
+                  {/* Safari doesn't focus buttons on click, so focus it ourselves: the menu opens on focus-within */}
+                  <button type="button" aria-haspopup="true" onClick={(e) => e.currentTarget.focus()} className={item.props.className}>
                     {item.props.children}
                   </button>
                   <div className="absolute left-0 top-full pt-2 invisible opacity-0 translate-y-1 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-[opacity,transform,visibility] duration-200">
@@ -243,7 +265,7 @@ export default function Header() {
       </div>
 
       {/* Mobile bottom app bar */}
-      <nav aria-label="Quick links" className="sm:hidden fixed bottom-0 inset-x-0 z-[110] bg-cream-50/95 backdrop-blur-md border-t border-ink-800/10 shadow-[0_-6px_22px_-12px_rgba(16,43,61,.4)] grid grid-cols-5">
+      <nav aria-label="Quick links" className="sm:hidden fixed bottom-0 inset-x-0 z-[110] bg-cream-100/95 backdrop-blur-md border-t border-ink-800/10 shadow-[0_-6px_22px_-12px_rgba(16,43,61,.4)] grid grid-cols-5">
         {APP_BAR.map(({ label, path, icon: Icon, mid }) =>
           mid ? (
             <Link key={label} to={path} className="flex flex-col items-center -mt-4 pb-2 text-[0.64rem] font-semibold text-saffron-500">
