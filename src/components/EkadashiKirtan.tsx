@@ -5,8 +5,8 @@ import Modal from '@/components/Modal';
 import { EKADASHI_SHEET_URL } from '@/data/content';
 import { PERIODS, periodOf, startMinutes, type Period } from '@/lib/kirtanTime';
 
-// Column names match the sheet's header row.
-export const COLUMNS = ['Name', 'Address', 'PhoneNumber', 'City', 'State', 'Country', 'Timings'] as const;
+// Column names match the sheet's header row. Hidden = "TRUE" hides the row from the public list (admin still sees it).
+export const COLUMNS = ['Name', 'Address', 'PhoneNumber', 'City', 'State', 'Country', 'Timings', 'Hidden'] as const;
 export type Entry = Record<(typeof COLUMNS)[number], string>;
 // _row = the entry's row number in the sheet, used by the admin page to edit it.
 export type Row = Entry & { _row: number };
@@ -19,11 +19,14 @@ const LABELS: Record<(typeof COLUMNS)[number], string> = {
   State: 'State',
   Country: 'Country',
   Timings: 'Timings',
+  Hidden: 'Hidden',
 };
 const REQUIRED = new Set(['Name', 'City', 'State', 'Timings']);
 
 export const clean = (r: Partial<Record<string, unknown>>): Entry =>
   Object.fromEntries(COLUMNS.map((c) => [c, String(r[c] ?? '').trim()])) as Entry;
+
+export const isHidden = (r: Entry) => r.Hidden.toUpperCase() === 'TRUE';
 
 export const EKADASHI_PATH = '/ekadashi-kirtan-list';
 
@@ -195,6 +198,9 @@ function Select({ label, value, onChange, children }: { label: string; value: st
   );
 }
 
+// true = a serial-number column (1, 2, 3… within each table); false hides it.
+const SHOW_ROW_NUMBERS = true;
+
 const TH = [
   ['Name', 'w-[18%]'],
   ['Address', 'w-[28%]'],
@@ -264,9 +270,9 @@ export function KirtanTables({ rows, error, action }: { rows: Row[] | null; erro
             ))}
           </Select>
           <Select label="State" value={state} onChange={(v) => set({ state: v })}>
-            <option value="">All states ({inCountry.length})</option>
+            <option value="">All states</option>
             {options(inCountry, 'State').map(([k, o]) => (
-              <option key={k} value={k}>{o.label} ({o.n})</option>
+              <option key={k} value={k}>{o.label}</option>
             ))}
           </Select>
           <Select label="Time of day" value={time} onChange={(v) => set({ time: v })}>
@@ -303,11 +309,11 @@ export function KirtanTables({ rows, error, action }: { rows: Row[] | null; erro
         ) : shown.length === 0 ? (
           <p className="text-center text-ink-500 py-8">{filtered ? 'No kirtans match these filters.' : 'No kirtans listed yet.'}</p>
         ) : (
-          groups.map(([heading, list]) => (
+          groups.map(([heading, list], gi) => (
             <section key={heading}>
               {heading && (
                 <h3 className="font-serif-display text-2xl text-brand-deep mb-3">
-                  {heading} <span className="text-sm font-sans text-ink-400">({list.length})</span>
+                  {gi + 1}. {heading} <span className="text-sm font-sans text-ink-400">({list.length})</span>
                 </h3>
               )}
               <div className="overflow-x-auto rounded-xl ring-1 ring-gold/25 bg-white">
@@ -315,6 +321,7 @@ export function KirtanTables({ rows, error, action }: { rows: Row[] | null; erro
                 <table className="w-full min-w-[820px] table-fixed text-sm text-left">
                   <thead className="bg-saffron-50 text-ink-700">
                     <tr>
+                      {SHOW_ROW_NUMBERS && <th scope="col" className="px-3 py-2 font-semibold w-[48px]">#</th>}
                       {cols.map(([h, w]) => (
                         <th key={h} scope="col" className={`px-3 py-2 font-semibold ${w}`}>{h}</th>
                       ))}
@@ -325,7 +332,11 @@ export function KirtanTables({ rows, error, action }: { rows: Row[] | null; erro
                     {list.map((r, i) => (
                       // _row is missing until the Apps Script is redeployed with row numbers
                       <tr key={r._row || i}>
-                        <td className="px-3 py-2 font-medium text-ink-800">{r.Name}</td>
+                        {SHOW_ROW_NUMBERS && <td className="px-3 py-2 text-ink-400">{i + 1}</td>}
+                        <td className="px-3 py-2 font-medium text-ink-800">
+                          {r.Name}
+                          {isHidden(r) && <span className="ml-2 px-2 py-0.5 rounded-full bg-ink-800/10 text-ink-500 text-[0.7rem] font-semibold uppercase">Hidden</span>}
+                        </td>
                         <td className="px-3 py-2">{r.Address}</td>
                         <td className="px-3 py-2 whitespace-nowrap">
                           {r.PhoneNumber && <a href={`tel:${r.PhoneNumber.replace(/\s/g, '')}`} className="text-brand hover:underline">{r.PhoneNumber}</a>}
@@ -356,7 +367,7 @@ export function EntryFields({ rows, initial }: { rows: Entry[]; initial?: Entry 
   return (
     <>
       <div className="grid sm:grid-cols-2 gap-4">
-        {COLUMNS.map((c) => (
+        {COLUMNS.filter((c) => c !== 'Hidden').map((c) => (
           <label key={c} className={`block ${c === 'Address' ? 'sm:col-span-2' : ''}`}>
             <span className="block text-sm font-semibold text-ink-700 mb-1.5">
               {LABELS[c]} {!REQUIRED.has(c) && <span className="font-normal text-ink-400">(optional)</span>}
@@ -374,6 +385,10 @@ export function EntryFields({ rows, initial }: { rows: Entry[]; initial?: Entry 
           </label>
         ))}
       </div>
+      <label className="mt-4 flex items-center gap-2 text-sm font-semibold text-ink-700">
+        <input type="checkbox" name="Hidden" value="TRUE" defaultChecked={!!initial && isHidden(initial)} className="w-4 h-4 accent-saffron-500" />
+        Hide from the public list (admins still see it)
+      </label>
       {SUGGEST.map((c) => (
         <datalist key={c} id={`ek-${c}`}>
           {[...new Set(rows.map((r) => r[c]).filter(Boolean))].sort().map((v) => <option key={v} value={v} />)}

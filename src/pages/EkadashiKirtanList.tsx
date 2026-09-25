@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import PageHero from '@/components/PageHero';
-import { KirtanTables, fetchKirtans, type Row } from '@/components/EkadashiKirtan';
+import { KirtanTables, fetchKirtans, isHidden, type Row } from '@/components/EkadashiKirtan';
 import { IMAGES } from '@/data/content';
 
 export default function EkadashiKirtanList() {
@@ -9,7 +9,7 @@ export default function EkadashiKirtanList() {
 
   useEffect(() => {
     fetchKirtans()
-      .then(setRows)
+      .then((all) => setRows(all.filter((r) => !isHidden(r))))
       .catch(() => setError('Could not load the kirtan list. Check your connection and reload the page.'));
   }, []);
 

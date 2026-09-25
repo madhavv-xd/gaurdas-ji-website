@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { Plus, Pencil, Trash2, ArrowLeft, Loader2, LogOut } from 'lucide-react';
+import { Plus, Pencil, Trash2, ArrowLeft, Loader2, LogOut, CheckCircle2, X } from 'lucide-react';
 import { usePageTitle } from '@/lib/usePageTitle';
 import { KirtanTables, EntryFields, fetchKirtans, postSheet, clean, type Row } from '@/components/EkadashiKirtan';
 
@@ -66,6 +66,13 @@ function Editor({ creds, onLogout }: { creds: Creds; onLogout: () => void }) {
   const [editing, setEditing] = useState<Row | 'new' | null>(null);
   const [deleting, setDeleting] = useState<number | null>(null);
   const [actionError, setActionError] = useState('');
+  // Popup after a successful add / edit / delete; clears itself after a few seconds.
+  const [notice, setNotice] = useState('');
+  useEffect(() => {
+    if (!notice) return;
+    const t = setTimeout(() => setNotice(''), 5000);
+    return () => clearTimeout(t);
+  }, [notice]);
 
   const load = () => {
     setRows(null);
@@ -82,6 +89,7 @@ function Editor({ creds, onLogout }: { creds: Creds; onLogout: () => void }) {
     setActionError('');
     try {
       await postSheet({ action: 'delete', ...creds, row: r._row, original: clean(r) });
+      setNotice(`Row deleted: sheet row ${r._row}, “${r.Name}” (${r.City})`);
       load();
     } catch (err) {
       setActionError((err as Error).message);
@@ -90,6 +98,16 @@ function Editor({ creds, onLogout }: { creds: Creds; onLogout: () => void }) {
     }
   }
 
+  const popup = notice && (
+    <div role="status" className="fixed bottom-6 right-6 z-[300] flex items-start gap-3 max-w-[min(420px,calc(100vw-3rem))] p-4 rounded-xl bg-white ring-1 ring-gold/30 shadow-lift">
+      <CheckCircle2 className="w-5 h-5 shrink-0 text-forest-600" aria-hidden />
+      <p className="text-sm text-ink-700">{notice}</p>
+      <button onClick={() => setNotice('')} className="shrink-0 text-ink-400 hover:text-ink-700" aria-label="Dismiss">
+        <X className="w-4 h-4" />
+      </button>
+    </div>
+  );
+
   if (editing) {
     return (
       <EntryForm
@@ -97,7 +115,8 @@ function Editor({ creds, onLogout }: { creds: Creds; onLogout: () => void }) {
         rows={rows ?? []}
         row={editing === 'new' ? undefined : editing}
         onBack={() => setEditing(null)}
-        onSaved={() => {
+        onSaved={(msg) => {
+          setNotice(msg);
           setEditing(null);
           load();
         }}
@@ -107,6 +126,7 @@ function Editor({ creds, onLogout }: { creds: Creds; onLogout: () => void }) {
 
   return (
     <>
+      {popup}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <button onClick={() => setEditing('new')} className="btn-saffron py-2.5">
           <Plus className="w-4 h-4" aria-hidden /> Add kirtan
@@ -150,7 +170,7 @@ function EntryForm({
   rows: Row[];
   row?: Row;
   onBack: () => void;
-  onSaved: () => void;
+  onSaved: (msg: string) => void;
 }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -166,7 +186,11 @@ function EntryForm({
           ? { action: 'update', ...creds, row: row._row, original: clean(row), entry }
           : { action: 'add', ...creds, entry },
       );
-      onSaved();
+      onSaved(
+        row
+          ? `Row updated: sheet row ${row._row}, “${entry.Name}” (${entry.City})`
+          : `Row added: “${entry.Name}” (${entry.City})`,
+      );
     } catch (err) {
       setError((err as Error).message);
       setBusy(false);

@@ -40,7 +40,7 @@ const d = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties;
 
 const upcoming = KATHAS.filter((k) => k.status === 'upcoming');
 const categoryName = (id: number) => CATEGORIES.find((c) => c.id === id)?.name ?? '';
-const aboutIntro = (ABOUT.html.match(/<p>[\s\S]*?<\/p>/g) ?? []).slice(0, 4).join('');
+const aboutIntro = (ABOUT.html.match(/<p>[\s\S]*?<\/p>/g) ?? []).slice(0, 2).join('');
 
 const STATS = [
   { value: KATHAS.filter((k) => k.status === 'done').length, label: 'Kathas held' },
@@ -279,8 +279,24 @@ export default function Home() {
               <Link to="/about-shri-gaurdasji" className="btn-ink">
                 आगे पढ़े <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link to="/about-guru-ji" className="btn-outline">Guru Parampara</Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* GURU PARAMPARA */}
+      <section className="py-[52px] sm:py-[76px] bg-ink-900 text-white">
+        <div className="max-w-[1200px] mx-auto px-[22px]">
+          <SectionHeading eyebrow="Guru Parampara" title="गुरु परम्परा" light />
+          <div className="grid md:grid-cols-2 gap-6 max-w-[960px] mx-auto">
+            {PARAMPARA_IMAGES.slice(2).map((src, i) => (
+              <img key={src} src={src} alt="Guru parampara" loading="lazy" data-reveal style={d(i * 120)} className="w-full rounded-[18px] bg-white p-2 shadow-lift" />
+            ))}
+          </div>
+          <div className="text-center mt-10">
+            <Link to="/about-guru-ji" className="btn-saffron">
+              विस्तार से पढ़ें <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </section>
@@ -316,23 +332,6 @@ export default function Home() {
           <div className="text-center mt-10">
             <Link to="/all-kathas" className="btn-outline">
               View All Kathas <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* GURU PARAMPARA */}
-      <section className="py-[52px] sm:py-[76px] bg-ink-900 text-white">
-        <div className="max-w-[1200px] mx-auto px-[22px]">
-          <SectionHeading eyebrow="Guru Parampara" title="गुरु परम्परा" light />
-          <div className="grid md:grid-cols-2 gap-6 max-w-[960px] mx-auto">
-            {PARAMPARA_IMAGES.slice(2).map((src, i) => (
-              <img key={src} src={src} alt="Guru parampara" loading="lazy" data-reveal style={d(i * 120)} className="w-full rounded-[18px] bg-white p-2 shadow-lift" />
-            ))}
-          </div>
-          <div className="text-center mt-10">
-            <Link to="/about-guru-ji" className="btn-saffron">
-              विस्तार से पढ़ें <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>

@@ -128,10 +128,13 @@ export default function Header() {
                 </Link>
               );
               if (link.path !== '/events') return item;
-              // Events dropdown: opens on hover and on keyboard focus (Tab from "Events" into the menu)
+              // Events dropdown: opens on hover and on keyboard focus (Tab from "Events" into the menu).
+              // The trigger is a button, not a link, so clicking it keeps you on the current page.
               return (
                 <div key={link.path} className="group relative">
-                  {item}
+                  <button type="button" aria-haspopup="true" className={item.props.className}>
+                    {item.props.children}
+                  </button>
                   <div className="absolute left-0 top-full pt-2 invisible opacity-0 translate-y-1 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-[opacity,transform,visibility] duration-200">
                     <div className="min-w-[210px] bg-white rounded-[14px] p-1.5 ring-1 ring-gold/25 shadow-lift">
                       <Link to="/events" className="block px-3 py-2 rounded-[10px] text-[0.9rem] text-ink-600 hover:bg-brand-soft hover:text-brand-deep">
