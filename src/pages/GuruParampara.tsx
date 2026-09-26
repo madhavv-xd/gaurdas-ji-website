@@ -33,7 +33,7 @@ export default function GuruParampara() {
             <GuruVarg onOpen={(i) => setOpen(2 + i)} />
             <Chart src={c3} label="Open chart 3 full size" onOpen={() => setOpen(VIEWER.length - 1)} />
           </div>
-          <p className="text-center text-sm text-ink-400 mt-6">Tap a chart or photo to view it full size.</p>
+          <p className="text-center text-sm font-bold text-ink-400 mt-6">Tap a chart or photo to view it full size.</p>
           <div className="text-center mt-8">
             <Link to="/about-shri-gaurdasji" className="btn-outline">
               About Maharaj Ji <ArrowRight className="w-4 h-4" />

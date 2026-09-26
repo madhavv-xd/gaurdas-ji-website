@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { CalendarDays, Loader2, Search, X, ArrowRight, Clock, Phone } from 'lucide-react';
-import Modal from '@/components/Modal';
 import { EKADASHI_SHEET_URL } from '@/data/content';
 import { PERIODS, periodOf, startMinutes, type Period } from '@/lib/kirtanTime';
 
@@ -51,6 +50,20 @@ export function EkadashiDatesButton() {
   const [error, setError] = useState('');
   const fetched = useRef(false);
   const hadDates = useRef(dates !== null);
+  const box = useRef<HTMLDivElement>(null);
+
+  // close on Escape or a click outside the button + panel
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    const onDown = (e: PointerEvent) => !box.current?.contains(e.target as Node) && setOpen(false);
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onDown);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onDown);
+    };
+  }, [open]);
 
   // Fetch only when first opened, so the home page doesn't wait on Apps Script.
   useEffect(() => {
@@ -79,65 +92,71 @@ export function EkadashiDatesButton() {
   const upcoming = (dates ?? []).filter((d) => d.date >= today).slice(0, 6);
 
   return (
-    <>
-      <button
-        onClick={() => setOpen(true)}
-        className="fixed left-4 bottom-20 sm:bottom-6 z-[120] inline-flex items-center gap-2 pl-3 pr-4 py-2.5 rounded-full bg-saffron-500 hover:bg-saffron-600 text-white font-semibold text-[0.9rem] shadow-lift transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-saffron-300"
+    <div ref={box} className="fixed left-4 bottom-20 sm:bottom-6 z-[120]">
+      {/* panel extends up out of the button */}
+      <div
+        id="ekadashi-dates"
+        className={`absolute left-0 bottom-full mb-3 w-[min(380px,calc(100vw-2rem))] origin-bottom-left bg-cream-50 rounded-[22px] shadow-lift ring-1 ring-gold/25 overflow-hidden transition-[opacity,transform,visibility] duration-300 motion-reduce:transition-none ${
+          open ? 'opacity-100 translate-y-0 scale-100' : 'invisible opacity-0 translate-y-2 scale-95'
+        }`}
       >
-        <CalendarDays className="w-5 h-5" aria-hidden />
+        <header className="bg-ink-800 text-white px-5 py-4">
+          <h2 className="font-serif-display text-2xl">Upcoming Ekadashi Dates</h2>
+        </header>
+        <div className="px-5 py-4 max-h-[60vh] overflow-y-auto" aria-live="polite">
+          {error ? (
+            <p className="text-center text-ink-500 py-6">{error}</p>
+          ) : !dates ? (
+            <p className="flex items-center justify-center gap-2 text-ink-500 py-6">
+              <Loader2 className="w-5 h-5 animate-spin text-saffron-500" aria-hidden /> Loading dates…
+            </p>
+          ) : upcoming.length === 0 ? (
+            <p className="text-center text-ink-500 py-6">No upcoming dates have been added yet.</p>
+          ) : (
+            <ul className="divide-y divide-cream-200">
+              {upcoming.map((d) => {
+                const [y, m, day] = d.date.split('-').map(Number);
+                const when = d.date === today ? 'Today' : d.date === tomorrow ? 'Tomorrow' : '';
+                return (
+                  <li key={d.date + d.name} className="flex items-center gap-4 py-3">
+                    <span className="w-14 shrink-0 text-center rounded-xl bg-white ring-1 ring-gold/25 py-1.5">
+                      <span className="block text-xl font-semibold text-brand-deep leading-none">{day}</span>
+                      <span className="block text-[0.7rem] uppercase tracking-wide text-ink-400 mt-1">
+                        {new Date(y, m - 1, day).toLocaleDateString('en-IN', { month: 'short' })}
+                      </span>
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block font-semibold text-ink-800">{d.name || 'Ekadashi'}</span>
+                      <span className="block text-sm text-ink-500">
+                        {new Date(y, m - 1, day).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric' })}
+                        {when && <span className="ml-2 font-semibold text-saffron-600">{when}</span>}
+                      </span>
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+          <Link
+            to={EKADASHI_PATH}
+            onClick={() => setOpen(false)}
+            className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand hover:underline"
+          >
+            Find an Ekadashi kirtan near you <ArrowRight className="w-4 h-4" aria-hidden />
+          </Link>
+        </div>
+      </div>
+
+      <button
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-controls="ekadashi-dates"
+        className="inline-flex items-center gap-2 pl-3 pr-4 py-2.5 rounded-full bg-saffron-500 hover:bg-saffron-600 text-white font-semibold text-[0.9rem] shadow-lift transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-saffron-300"
+      >
+        {open ? <X className="w-5 h-5" aria-hidden /> : <CalendarDays className="w-5 h-5" aria-hidden />}
         Upcoming Ekadashi Dates
       </button>
-
-      <Modal open={open} onClose={() => setOpen(false)} label="Upcoming Ekadashi dates" className="!w-[min(480px,calc(100vw-2rem))]">
-        <div className="bg-cream-50 rounded-[22px] shadow-lift overflow-hidden">
-          <header className="bg-ink-800 text-white px-6 py-5">
-            <h2 className="font-serif-display text-2xl sm:text-3xl">Upcoming Ekadashi Dates</h2>
-          </header>
-          <div className="px-6 py-5" aria-live="polite">
-            {error ? (
-              <p className="text-center text-ink-500 py-6">{error}</p>
-            ) : !dates ? (
-              <p className="flex items-center justify-center gap-2 text-ink-500 py-6">
-                <Loader2 className="w-5 h-5 animate-spin text-saffron-500" aria-hidden /> Loading dates…
-              </p>
-            ) : upcoming.length === 0 ? (
-              <p className="text-center text-ink-500 py-6">No upcoming dates have been added yet.</p>
-            ) : (
-              <ul className="divide-y divide-cream-200">
-                {upcoming.map((d) => {
-                  const [y, m, day] = d.date.split('-').map(Number);
-                  const when = d.date === today ? 'Today' : d.date === tomorrow ? 'Tomorrow' : '';
-                  return (
-                    <li key={d.date + d.name} className="flex items-center gap-4 py-3">
-                      <span className="w-14 shrink-0 text-center rounded-xl bg-white ring-1 ring-gold/25 py-1.5">
-                        <span className="block text-xl font-semibold text-brand-deep leading-none">{day}</span>
-                        <span className="block text-[0.7rem] uppercase tracking-wide text-ink-400 mt-1">
-                          {new Date(y, m - 1, day).toLocaleDateString('en-IN', { month: 'short' })}
-                        </span>
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block font-semibold text-ink-800">{d.name || 'Ekadashi'}</span>
-                        <span className="block text-sm text-ink-500">
-                          {new Date(y, m - 1, day).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric' })}
-                          {when && <span className="ml-2 font-semibold text-saffron-600">{when}</span>}
-                        </span>
-                      </span>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-            <Link
-              to={EKADASHI_PATH}
-              onClick={() => setOpen(false)}
-              className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand hover:underline"
-            >
-              Find an Ekadashi kirtan near you <ArrowRight className="w-4 h-4" aria-hidden />
-            </Link>
-          </div>
-        </div>
-      </Modal>
-    </>
+    </div>
   );
 }
 
@@ -237,7 +256,18 @@ const TH = [
 
 // Search, filters and sort (all kept in the URL), then the rows: one table per state when sorted
 // by state, otherwise one table in the chosen order. `action` adds a trailing column (admin's Edit / Delete).
-export function KirtanTables({ rows, error, action }: { rows: Row[] | null; error: string; action?: (r: Row) => ReactNode }) {
+// `counts` = kirtan totals after each state heading and on the "All countries" / "Any time" options.
+export function KirtanTables({
+  rows,
+  error,
+  action,
+  counts = true,
+}: {
+  rows: Row[] | null;
+  error: string;
+  action?: (r: Row) => ReactNode;
+  counts?: boolean;
+}) {
   const [params, setParams] = useSearchParams();
   const q = params.get('q') ?? '';
   const country = params.get('country') ?? '';
@@ -289,7 +319,7 @@ export function KirtanTables({ rows, error, action }: { rows: Row[] | null; erro
         </label>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <Select label="Country" value={country} onChange={(v) => set({ country: v, state: '' })}>
-            <option value="">All countries ({all.length})</option>
+            <option value="">All countries{counts && ` (${all.length})`}</option>
             {options(all, 'Country').map(([k, o]) => (
               <option key={k} value={k}>{o.label} ({o.n})</option>
             ))}
@@ -301,7 +331,7 @@ export function KirtanTables({ rows, error, action }: { rows: Row[] | null; erro
             ))}
           </Select>
           <Select label="Time of day" value={time} onChange={(v) => set({ time: v })}>
-            <option value="">Any time ({inState.length})</option>
+            <option value="">Any time{counts && ` (${inState.length})`}</option>
             {PERIODS.map((p) => (
               <option key={p.id} value={p.id}>{p.label} ({periodCount(p.id)})</option>
             ))}
@@ -347,7 +377,7 @@ export function KirtanTables({ rows, error, action }: { rows: Row[] | null; erro
             <section key={heading}>
               {heading && (
                 <h3 className="font-serif-display text-2xl text-brand-deep mb-3">
-                  {gi + 1}. {heading} <span className="text-sm font-sans text-ink-400">({list.length})</span>
+                  {gi + 1}. {heading} {counts && <span className="text-sm font-sans text-ink-400">({list.length})</span>}
                 </h3>
               )}
               {/* phones: one card per kirtan instead of a sideways-scrolling table */}

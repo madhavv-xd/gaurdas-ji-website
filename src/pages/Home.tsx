@@ -14,9 +14,11 @@ import {
   ChevronRight,
   Navigation,
   Landmark,
+  Play,
+  Calendar,
 } from 'lucide-react';
 import SectionHeading from '@/components/SectionHeading';
-import EventCard from '@/components/EventCard';
+import CardCarousel, { CardStack, PosterCard } from '@/components/CardCarousel';
 import GuruVarg from '@/components/GuruVarg';
 import VideoGallery from '@/components/VideoGallery';
 import { EkadashiDatesButton } from '@/components/EkadashiKirtan';
@@ -227,7 +229,6 @@ function HeroSlider() {
 
 export default function Home() {
   usePageTitle();
-  const featured = CATEGORIES.filter((c) => c.featured);
 
   return (
     <div>
@@ -301,7 +302,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* KATHAS — featured categories bento */}
+      {/* KATHAS — every katha series, as a carousel */}
       <section className="py-[52px] sm:py-[76px] bg-cream-100">
         <div className="max-w-[1200px] mx-auto px-[22px]">
           <SectionHeading
@@ -309,27 +310,27 @@ export default function Home() {
             title="Shri Gaurdas Ji Maharaj Kathas"
             description="Every katha series with its dates, venues and recordings of each day."
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[200px] lg:auto-rows-[170px] gap-4">
-            {featured.map((c, i) => (
-              <Link
+          <CardCarousel label="Katha series">
+            {CATEGORIES.map((c) => (
+              <PosterCard
                 key={c.id}
                 to={`/katha-details/${c.id}`}
-                viewTransition
-                className={`group relative rounded-[14px] overflow-hidden shadow-soft bg-cream-200 flex items-end hover:shadow-lift transition-shadow duration-300 ${
-                  i === 0 ? 'sm:col-span-2 lg:row-span-2' : i === 3 ? 'sm:col-span-2' : ''
-                }`}
+                image={c.image}
+                badge={`${KATHAS.filter((k) => k.categoryId === c.id).length} kathas`}
+                transitionName={`katha-${c.id}`}
+                center={
+                  <span className="w-14 h-14 rounded-full bg-white/25 backdrop-blur-sm ring-1 ring-white/50 flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-saffron-500 transition duration-300">
+                    <Play className="w-6 h-6 ml-0.5" fill="currentColor" aria-hidden />
+                  </span>
+                }
               >
-                <img src={c.image} alt="" loading="lazy" style={{ viewTransitionName: `katha-${c.id}` }} className="[view-transition-class:hero-morph] absolute inset-0 w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700" />
-                <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(9,24,36,.9),rgba(9,24,36,.05)_62%)]" />
-                <span className="absolute top-3 left-3 z-10 text-white text-[0.68rem] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-saffron-500">
-                  {KATHAS.filter((k) => k.categoryId === c.id).length} kathas
+                <b className="block font-sanskrit font-normal text-[1.5rem] leading-tight">{c.name}</b>
+                <span className="mt-1.5 inline-flex items-center gap-1.5 text-sm text-white/80 group-hover:text-white">
+                  Watch the recordings <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden />
                 </span>
-                <div className="relative z-10 p-3.5">
-                  <b className={`block font-sanskrit font-normal leading-tight text-white ${i === 0 ? 'text-[1.5rem]' : 'text-[1.1rem]'}`}>{c.name}</b>
-                </div>
-              </Link>
+              </PosterCard>
             ))}
-          </div>
+          </CardCarousel>
           <div className="text-center mt-10">
             <Link to="/all-kathas" className="btn-outline">
               View All Kathas <ArrowRight className="w-4 h-4" />
@@ -343,13 +344,22 @@ export default function Home() {
         <section className="py-[52px] sm:py-[76px]">
           <div className="max-w-[1200px] mx-auto px-[22px]">
             <SectionHeading eyebrow="Events" title="All Upcoming Events" />
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-[18px] justify-center">
-              {upcoming.slice(0, 4).map((k, i) => (
-                <div key={k.id} data-reveal style={d(i * 60)} className="flex">
-                  <EventCard katha={k} />
-                </div>
+            <CardStack label="Upcoming events">
+              {upcoming.map((k) => (
+                <PosterCard key={k.id} to={`/event-detail/${k.id}`} image={k.images[0] ?? CATEGORIES.find((c) => c.id === k.categoryId)?.image ?? IMAGES.heroKatha} badge="Upcoming">
+                  {categoryName(k.categoryId) && <p className="font-sanskrit text-saffron-300 text-sm mb-1">{categoryName(k.categoryId)}</p>}
+                  <b className="block font-serif-display font-normal text-[1.6rem] leading-tight">{k.name}</b>
+                  <dl className="mt-2.5 space-y-1 text-[0.85rem] text-white/85">
+                    {k.dates && (
+                      <div className="flex gap-2"><dt className="sr-only">Dates</dt><Calendar className="w-4 h-4 mt-0.5 text-saffron-400 flex-none" aria-hidden /><dd>{k.dates}</dd></div>
+                    )}
+                    {k.location && (
+                      <div className="flex gap-2"><dt className="sr-only">Venue</dt><MapPin className="w-4 h-4 mt-0.5 text-saffron-400 flex-none" aria-hidden /><dd className="line-clamp-2">{k.location}</dd></div>
+                    )}
+                  </dl>
+                </PosterCard>
               ))}
-            </div>
+            </CardStack>
             <div className="text-center mt-10">
               <Link to="/events" className="btn-outline">
                 All Events <ArrowRight className="w-4 h-4" />

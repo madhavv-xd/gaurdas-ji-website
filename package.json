@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "sync": "node scripts/sync-live.mjs",
+    "prebuild": "node scripts/sync-live.mjs || echo Sync failed - building with the existing snapshot",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",

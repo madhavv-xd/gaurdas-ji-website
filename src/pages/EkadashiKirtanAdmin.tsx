@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
-import { Plus, Pencil, Trash2, ArrowLeft, Loader2, LogOut, CheckCircle2, X } from 'lucide-react';
+import { Plus, Pencil, Trash2, ArrowLeft, Loader2, CheckCircle2, X } from 'lucide-react';
 import { usePageTitle } from '@/lib/usePageTitle';
 import { KirtanTables, EntryFields, fetchKirtans, postSheet, clean, type Row } from '@/components/EkadashiKirtan';
 
@@ -14,7 +14,7 @@ export default function EkadashiKirtanAdmin() {
     <section className="py-[52px] sm:py-[76px] bg-cream-50 min-h-[70vh]">
       <div className="max-w-[1200px] mx-auto px-[22px]">
         <h1 className="font-serif-display text-[clamp(2rem,4vw,3rem)] text-ink-800 mb-6">Ekadashi Kirtan Admin</h1>
-        {creds ? <Editor creds={creds} onLogout={() => setCreds(null)} /> : <Login onLogin={setCreds} />}
+        {creds ? <Editor creds={creds} /> : <Login onLogin={setCreds} />}
       </div>
     </section>
   );
@@ -59,7 +59,7 @@ function Login({ onLogin }: { onLogin: (c: Creds) => void }) {
   );
 }
 
-function Editor({ creds, onLogout }: { creds: Creds; onLogout: () => void }) {
+function Editor({ creds }: { creds: Creds }) {
   const [rows, setRows] = useState<Row[] | null>(null);
   const [error, setError] = useState('');
   // 'new' = adding, a Row = editing that row
@@ -131,14 +131,12 @@ function Editor({ creds, onLogout }: { creds: Creds; onLogout: () => void }) {
         <button onClick={() => setEditing('new')} className="btn-saffron py-2.5">
           <Plus className="w-4 h-4" aria-hidden /> Add kirtan
         </button>
-        <button onClick={onLogout} className="btn-outline py-2.5">
-          <LogOut className="w-4 h-4" aria-hidden /> Log out
-        </button>
       </div>
       {actionError && <p role="alert" className="mb-6 text-sm text-red-700">{actionError}</p>}
       <KirtanTables
         rows={rows}
         error={error}
+        counts={false}
         action={(r) => (
           <div className="flex items-center gap-3">
             <button onClick={() => setEditing(r)} className="inline-flex items-center gap-1 text-brand font-semibold hover:underline">
