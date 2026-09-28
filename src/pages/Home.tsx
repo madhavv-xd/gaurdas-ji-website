@@ -298,8 +298,8 @@ export default function Home() {
       <section className="py-[52px] sm:py-[76px] bg-ink-900 text-white">
         <div className="max-w-[1200px] mx-auto px-[22px]">
           <SectionHeading eyebrow="Guru Parampara" title="गुरु परम्परा" light />
-          <div className="max-w-[480px] mx-auto">
-            <GuruVarg />
+          <div className="max-w-[680px] mx-auto">
+            <GuruVarg wide />
           </div>
           <div className="text-center mt-10">
             <Link to="/about-guru-ji" className="btn-saffron">
