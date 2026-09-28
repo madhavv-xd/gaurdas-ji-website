@@ -21,6 +21,7 @@ import Donate from '@/pages/Donate';
 import NotFound from '@/pages/NotFound';
 import EkadashiKirtanList from '@/pages/EkadashiKirtanList';
 import EkadashiKirtanAdmin from '@/pages/EkadashiKirtanAdmin';
+import SevaHisab from '@/pages/SevaHisab';
 
 // Fades up every section's content container (and anything marked data-reveal) as it scrolls into view.
 function ScrollReveal() {
@@ -92,6 +93,7 @@ function Shell() {
               <Route path="/donate-us" element={<Donate />} />
               <Route path="/ekadashi-kirtan-list" element={<EkadashiKirtanList />} />
               <Route path="/ekadashikirtanAdmin" element={<EkadashiKirtanAdmin />} />
+              <Route path="/sevahisab" element={<SevaHisab />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </ErrorBoundary>

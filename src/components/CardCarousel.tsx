@@ -6,9 +6,13 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 const d = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties;
 
 // Horizontal snap carousel: the centred card is full size, its neighbours shrink and fade.
+// Infinite: the cards are rendered three times; once scrolling settles outside the middle
+// copy, the track jumps (invisibly) to the same card in the middle copy.
 export default function CardCarousel({ label, children }: { label: string; children: ReactNode }) {
   const slides = Children.toArray(children);
+  const n = slides.length;
   const track = useRef<HTMLDivElement>(null);
+  const settle = useRef(0);
   const [cur, setCur] = useState(0);
 
   const centre = (i: number, smooth = true) => {
@@ -21,10 +25,10 @@ export default function CardCarousel({ label, children }: { label: string; child
 
   // open on the middle card, so there are neighbours on both sides
   useEffect(() => {
-    const mid = Math.floor((slides.length - 1) / 2);
+    const mid = n + Math.floor((n - 1) / 2);
     centre(mid, false);
     setCur(mid);
-  }, [slides.length]);
+  }, [n]);
 
   const onScroll = () => {
     const t = track.current!;
@@ -36,6 +40,10 @@ export default function CardCarousel({ label, children }: { label: string; child
     let best = 0;
     for (let i = 1; i < t.children.length; i++) if (dist(i) < dist(best)) best = i;
     setCur(best);
+    clearTimeout(settle.current);
+    settle.current = window.setTimeout(() => {
+      if (best < n || best >= 2 * n) centre((best % n) + n, false);
+    }, 150);
   };
 
   return (
@@ -45,11 +53,19 @@ export default function CardCarousel({ label, children }: { label: string; child
         onScroll={onScroll}
         className="relative flex gap-5 overflow-x-auto snap-x snap-mandatory py-6 px-[calc(50%-130px)] sm:px-[calc(50%-150px)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]"
       >
-        {slides.map((s, i) => (
-          <div key={i} data-reveal style={d(i * 90)} className="snap-center shrink-0 w-[260px] sm:w-[300px]">
+        {[...slides, ...slides, ...slides].map((s, i) => (
+          <div
+            key={i}
+            data-reveal
+            style={d((i % n) * 90)}
+            // copies stay out of the tab order and the accessibility tree
+            {...(i < n || i >= 2 * n ? { inert: '', 'aria-hidden': true } : {})}
+            // view-transition names must be unique, so only the middle copy keeps them
+            className={`snap-center shrink-0 w-[260px] sm:w-[300px] ${i < n || i >= 2 * n ? '[&_img]:![view-transition-name:none]' : ''}`}
+          >
             <div
               className={`h-full transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none ${
-                i === cur ? 'scale-100 opacity-100' : 'scale-[.86] opacity-60'
+                i % n === cur % n ? 'scale-100 opacity-100' : 'scale-[.86] opacity-60'
               }`}
             >
               {s}
@@ -58,15 +74,15 @@ export default function CardCarousel({ label, children }: { label: string; child
         ))}
       </div>
 
-      <Controls n={slides.length} cur={cur} go={centre} />
+      <Controls n={n} cur={cur % n} go={(i) => centre(cur - (cur % n) + i)} loop />
     </div>
   );
 }
 
-// Arrows + dots. `loop` wraps past either end instead of disabling the arrow.
+// Arrows + dots. With `loop` the arrows never disable and pass -1 / n through; `go` wraps.
 function Controls({ n, cur, go, loop }: { n: number; cur: number; go: (i: number) => void; loop?: boolean }) {
   if (n < 2) return null;
-  const to = (i: number) => go(loop ? (i + n) % n : Math.min(n - 1, Math.max(0, i)));
+  const to = (i: number) => go(loop ? i : Math.min(n - 1, Math.max(0, i)));
   return (
     <div className="flex items-center justify-center gap-4 mt-2">
       <button onClick={() => to(cur - 1)} disabled={!loop && cur === 0} aria-label="Previous" className="p-2 rounded-full text-ink-800 hover:bg-cream-200 disabled:opacity-30 transition">

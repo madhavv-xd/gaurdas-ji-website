@@ -174,10 +174,6 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-2.5">
-            <a href={`tel:${SITE.phones[0].replace(/\s/g, '')}`} className="hidden md:inline-flex btn-outline !py-2.5 !px-5 !text-sm">
-              <Phone className="w-4 h-4" />
-              Call
-            </a>
             <Link to="/donate-us" className="hidden sm:inline-flex btn-saffron !py-2.5 !px-5 !text-sm">
               <Heart className="w-4 h-4" fill="currentColor" />
               Donate

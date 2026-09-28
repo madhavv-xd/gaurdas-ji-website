@@ -1,6 +1,7 @@
 import logo from '@/assets/logo-160.png';
 import wordmark from '@/assets/finalLogo.png';
 import qr from '@/assets/scanner.png';
+import nitaiDas from '@/assets/nitaidas-ji.jpg';
 import heroGaurdasji from '@/assets/hero-gaurdasji.jpg';
 import heroKatha from '@/assets/hero-katha.jpg';
 import gaurdasji1 from '@/assets/gaurDasji1.jpeg';
@@ -50,6 +51,7 @@ export const IMAGES = {
   logo,
   wordmark,
   qr,
+  nitaiDas,
   heroGaurdasji,
   heroKatha,
   gaurdasji1,
@@ -82,7 +84,6 @@ export const NAV_LINKS = [
   { label: 'Events', path: '/events' },
   { label: 'Bhajan', path: '/bhajan' },
   { label: 'Gallery', path: '/photos' },
-  { label: 'Shri Nitai Das Ji Maharaj', path: '/shri-nitai-das-ji-maharaj' },
   { label: 'Contact Us', path: '/contact-us' },
 ];
 
@@ -95,6 +96,10 @@ export const mapsDir = (place: string) => `https://www.google.com/maps/dir/?api=
 // GET returns the list; POST {action:'login'|'add'|'update'|'delete', id, password, …} is checked against the Users tab.
 export const EKADASHI_SHEET_URL =
   'https://script.google.com/macros/s/AKfycbxvt4wQJOZhuQ4hi5uMDYEmvpKkALRPfMcJXBGa9x-ij1ewHYFOVq9Tn27mvCiMu5NvGA/exec';
+
+// Web app URL of apps-script/seva-hisab.gs (…/exec). Every call needs an admin id + password.
+export const SEVA_HISAB_URL =
+  'https://script.google.com/macros/s/AKfycbxwN0szgLW7QFG_IzIoQ4ZOWhgw7i2KnDzlptwy8Ngm2beYIvoXOvKEPDQ4AC4fmY5-/exec';
 
 // Apps Script web app behind gaurkripadham.netlify.app/ShriNitaiDasJiMaharaj_Playlist; GET returns { kathas, videos }.
 export const NITAI_DAS_SHEET_URL =

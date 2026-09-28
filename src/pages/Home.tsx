@@ -234,6 +234,15 @@ export default function Home() {
     <div>
       <HeroSlider />
       <EkadashiDatesButton />
+      <Link
+        to="/shri-nitai-das-ji-maharaj"
+        className="group fixed right-[72px] bottom-20 sm:bottom-6 z-[110] w-[92px] sm:w-[128px] bg-cream-50 rounded-[16px] p-1.5 shadow-lift ring-1 ring-gold/30 hover:ring-saffron-400 transition"
+      >
+        <img src={IMAGES.nitaiDas} alt="" className="w-full aspect-square object-cover rounded-[12px]" />
+        <span className="block text-center font-serif-display text-ink-800 text-[0.82rem] sm:text-[0.95rem] leading-tight mt-1.5 mb-1 group-hover:text-saffron-600">
+          Shri Nitai Das Ji Maharaj
+        </span>
+      </Link>
 
       {/* QUICK STRIP */}
       <section className="bg-brand text-white">
