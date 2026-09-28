@@ -29,17 +29,17 @@ export const isHidden = (r: Entry) => r.Hidden.toUpperCase() === 'TRUE';
 
 export const EKADASHI_PATH = '/ekadashi-kirtan-list';
 
-type EkadashiDate = { date: string; name: string }; // date = 'yyyy-MM-dd'
+// date = 'yyyy-MM-dd'; paran = the sheet's "Paran Time" column, as typed
+type EkadashiDate = { date: string; name: string; paran?: string };
 
 // Local calendar date as 'yyyy-MM-dd', to compare with the sheet's dates as plain strings.
 const ymd = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
 const DATES_CACHE = 'ekadashi-dates-v1';
 
-// Floating home button: the next Ekadashi dates from the sheet's "Dates" tab.
-export function EkadashiDatesButton() {
-  const [open, setOpen] = useState(false);
-  // last dates this browser saw, shown at once while the fresh ones load
+// Dates from the sheet's "Dates" tab, fetched once `enabled` turns true.
+// The last dates this browser saw are shown at once while the fresh ones load.
+function useEkadashiDates(enabled: boolean) {
   const [dates, setDates] = useState<EkadashiDate[] | null>(() => {
     try {
       return JSON.parse(localStorage.getItem(DATES_CACHE) ?? 'null');
@@ -50,6 +50,66 @@ export function EkadashiDatesButton() {
   const [error, setError] = useState('');
   const fetched = useRef(false);
   const hadDates = useRef(dates !== null);
+
+  useEffect(() => {
+    if (!enabled || fetched.current) return;
+    fetched.current = true;
+    setError('');
+    fetch(`${EKADASHI_SHEET_URL}?view=dates`)
+      .then((r) => r.json())
+      .then((j) => {
+        setDates(j.dates ?? []);
+        try {
+          localStorage.setItem(DATES_CACHE, JSON.stringify(j.dates ?? []));
+        } catch {
+          /* storage blocked: nothing to do */
+        }
+      })
+      .catch(() => {
+        fetched.current = false; // let the next try retry
+        if (!hadDates.current) setError('Could not load the dates. Check your connection and try again.');
+      });
+  }, [enabled]);
+
+  return { dates, error };
+}
+
+// Kirtan list page: the next Ekadashi and its paran time, under the hero.
+export function NextEkadashi() {
+  const { dates } = useEkadashiDates(true);
+  const next = (dates ?? []).find((d) => d.date >= ymd(new Date()));
+  if (!next) return null;
+  const [y, m, day] = next.date.split('-').map(Number);
+  return (
+    <div className="mb-8 flex flex-wrap items-center gap-x-8 gap-y-3 p-5 rounded-xl bg-ink-900 text-white">
+      <span className="flex items-center gap-4">
+        <CalendarDays className="w-8 h-8 shrink-0 text-saffron-400" aria-hidden />
+        <span>
+          <span className="block text-xs font-semibold uppercase tracking-[0.12em] text-saffron-400">Next Ekadashi</span>
+          <span className="block font-serif-display text-2xl">
+            {next.name || 'Ekadashi'} ·{' '}
+            {new Date(y, m - 1, day).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+          </span>
+        </span>
+      </span>
+      {next.paran && (
+        <span className="flex items-center gap-4">
+          <Clock className="w-8 h-8 shrink-0 text-saffron-400" aria-hidden />
+          <span>
+            <span className="block text-xs font-semibold uppercase tracking-[0.12em] text-saffron-400">Paran time</span>
+            <span className="block font-serif-display text-2xl">{next.paran}</span>
+          </span>
+        </span>
+      )}
+    </div>
+  );
+}
+
+// Floating home button: the next Ekadashi from the sheet's "Dates" tab.
+export function EkadashiDatesButton() {
+  const [open, setOpen] = useState(false);
+  // Fetch only when first opened, so the home page doesn't wait on Apps Script.
+  const { dates, error } = useEkadashiDates(open);
   const box = useRef<HTMLDivElement>(null);
 
   // close on Escape or a click outside the button + panel
@@ -65,31 +125,10 @@ export function EkadashiDatesButton() {
     };
   }, [open]);
 
-  // Fetch only when first opened, so the home page doesn't wait on Apps Script.
-  useEffect(() => {
-    if (!open || fetched.current) return;
-    fetched.current = true;
-    setError('');
-    fetch(`${EKADASHI_SHEET_URL}?view=dates`)
-      .then((r) => r.json())
-      .then((j) => {
-        setDates(j.dates ?? []);
-        try {
-          localStorage.setItem(DATES_CACHE, JSON.stringify(j.dates ?? []));
-        } catch {
-          /* storage blocked: nothing to do */
-        }
-      })
-      .catch(() => {
-        fetched.current = false; // let the next open retry
-        if (!hadDates.current) setError('Could not load the dates. Check your connection and try again.');
-      });
-  }, [open]);
-
   const now = new Date();
   const today = ymd(now);
   const tomorrow = ymd(new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1));
-  const upcoming = (dates ?? []).filter((d) => d.date >= today).slice(0, 6);
+  const upcoming = (dates ?? []).filter((d) => d.date >= today).slice(0, 1);
 
   return (
     <div ref={box} className="fixed left-4 bottom-20 sm:bottom-6 z-[120]">
@@ -101,7 +140,7 @@ export function EkadashiDatesButton() {
         }`}
       >
         <header className="bg-ink-800 text-white px-5 py-4">
-          <h2 className="font-serif-display text-2xl">Upcoming Ekadashi Dates</h2>
+          <h2 className="font-serif-display text-2xl">Next Ekadashi Details</h2>
         </header>
         <div className="px-5 py-4 max-h-[60vh] overflow-y-auto" aria-live="polite">
           {error ? (
@@ -111,7 +150,7 @@ export function EkadashiDatesButton() {
               <Loader2 className="w-5 h-5 animate-spin text-saffron-500" aria-hidden /> Loading dates…
             </p>
           ) : upcoming.length === 0 ? (
-            <p className="text-center text-ink-500 py-6">No upcoming dates have been added yet.</p>
+            <p className="text-center text-ink-500 py-6">The next Ekadashi has not been added yet.</p>
           ) : (
             <ul className="divide-y divide-cream-200">
               {upcoming.map((d) => {
@@ -154,7 +193,7 @@ export function EkadashiDatesButton() {
         className="inline-flex items-center gap-2 pl-3 pr-4 py-2.5 rounded-full bg-saffron-500 hover:bg-saffron-600 text-white font-semibold text-[0.9rem] shadow-lift transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-saffron-300"
       >
         {open ? <X className="w-5 h-5" aria-hidden /> : <CalendarDays className="w-5 h-5" aria-hidden />}
-        Upcoming Ekadashi Dates
+        Next Ekadashi Details
       </button>
     </div>
   );
@@ -256,7 +295,7 @@ const TH = [
 
 // Search, filters and sort (all kept in the URL), then the rows: one table per state when sorted
 // by state, otherwise one table in the chosen order. `action` adds a trailing column (admin's Edit / Delete).
-// `counts` = kirtan totals after each state heading and on the "All countries" / "Any time" options.
+// `counts` = kirtan totals after each state heading.
 export function KirtanTables({
   rows,
   error,
@@ -319,7 +358,7 @@ export function KirtanTables({
         </label>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           <Select label="Country" value={country} onChange={(v) => set({ country: v, state: '' })}>
-            <option value="">All countries{counts && ` (${all.length})`}</option>
+            <option value="">All countries</option>
             {options(all, 'Country').map(([k, o]) => (
               <option key={k} value={k}>{o.label} ({o.n})</option>
             ))}
@@ -331,7 +370,7 @@ export function KirtanTables({
             ))}
           </Select>
           <Select label="Time of day" value={time} onChange={(v) => set({ time: v })}>
-            <option value="">Any time{counts && ` (${inState.length})`}</option>
+            <option value="">Any time</option>
             {PERIODS.map((p) => (
               <option key={p.id} value={p.id}>{p.label} ({periodCount(p.id)})</option>
             ))}

@@ -32,7 +32,6 @@ import {
   KATHAS,
   VIDEOS,
   BHAJANS,
-  PARAMPARA_IMAGES,
   LIVE_KATHA_YT,
   ytWatch,
   mapsDir,
@@ -236,7 +235,7 @@ export default function Home() {
       <EkadashiDatesButton />
       <Link
         to="/shri-nitai-das-ji-maharaj"
-        className="group fixed right-[72px] bottom-20 sm:bottom-6 z-[110] w-[92px] sm:w-[128px] bg-cream-50 rounded-[16px] p-1.5 shadow-lift ring-1 ring-gold/30 hover:ring-saffron-400 transition"
+        className="group fixed right-4 bottom-20 sm:bottom-6 z-[110] w-[92px] sm:w-[128px] bg-cream-50 rounded-[16px] p-1.5 shadow-lift ring-1 ring-gold/30 hover:ring-saffron-400 transition"
       >
         <img src={IMAGES.nitaiDas} alt="" className="w-full aspect-square object-cover rounded-[12px]" />
         <span className="block text-center font-serif-display text-ink-800 text-[0.82rem] sm:text-[0.95rem] leading-tight mt-1.5 mb-1 group-hover:text-saffron-600">
@@ -245,7 +244,7 @@ export default function Home() {
       </Link>
 
       {/* QUICK STRIP */}
-      <section className="bg-brand text-white">
+      <section className="bg-ink-900 text-white">
         <div className="max-w-[1200px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { icon: Radio, title: 'Live Katha', sub: 'Watch live on YouTube', href: ytWatch(LIVE_KATHA_YT) },
@@ -299,9 +298,8 @@ export default function Home() {
       <section className="py-[52px] sm:py-[76px] bg-ink-900 text-white">
         <div className="max-w-[1200px] mx-auto px-[22px]">
           <SectionHeading eyebrow="Guru Parampara" title="गुरु परम्परा" light />
-          <div className="grid md:grid-cols-2 gap-6 max-w-[960px] mx-auto">
+          <div className="max-w-[480px] mx-auto">
             <GuruVarg />
-            <img src={PARAMPARA_IMAGES[2]} alt="Guru parampara" loading="lazy" data-reveal style={d(60)} className="w-full rounded-[18px] bg-white p-2 shadow-lift" />
           </div>
           <div className="text-center mt-10">
             <Link to="/about-guru-ji" className="btn-saffron">

@@ -82,7 +82,7 @@ export const NAV_LINKS = [
   { label: 'Guru Parampara', path: '/about-guru-ji' },
   { label: 'Kathas', path: '/all-kathas' },
   { label: 'Events', path: '/events' },
-  { label: 'Bhajan', path: '/bhajan' },
+  { label: 'Bhajans', path: '/bhajan' },
   { label: 'Gallery', path: '/photos' },
   { label: 'Contact Us', path: '/contact-us' },
 ];

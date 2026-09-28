@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import PageHero from '@/components/PageHero';
-import { KirtanTables, fetchKirtans, isHidden, type Row } from '@/components/EkadashiKirtan';
+import { KirtanTables, NextEkadashi, fetchKirtans, isHidden, type Row } from '@/components/EkadashiKirtan';
 import { IMAGES } from '@/data/content';
 
 // Last list this browser saw: shown instantly while Apps Script (often 5–20 s) sends the fresh one.
@@ -47,6 +47,7 @@ export default function EkadashiKirtanList() {
 
       <section className="py-[52px] sm:py-[76px] bg-cream-50">
         <div className="max-w-[1200px] mx-auto px-[22px]">
+          <NextEkadashi />
           <KirtanTables rows={rows} error={error} />
         </div>
       </section>

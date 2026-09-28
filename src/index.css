@@ -49,6 +49,10 @@
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
+  /* keeps scrolling even with reduced motion: the chant strip should always move */
+  .chant-marquee {
+    animation: marquee 40s linear infinite;
+  }
   .animate-marquee {
     animation: marquee 30s linear infinite;
   }

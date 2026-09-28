@@ -16,7 +16,6 @@ import {
   Calendar,
   Image,
   ChevronDown,
-  Music2,
 } from 'lucide-react';
 import { NAV_LINKS, SITE, IMAGES, LIVE_KATHA_YT, ytWatch } from '@/data/content';
 import { EKADASHI_PATH } from '@/components/EkadashiKirtan';
@@ -93,6 +92,18 @@ export default function Header() {
             <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_0_4px_rgba(239,68,68,.25)] animate-pulse" />
             Live Katha
           </a>
+          {/* two identical halves; chant-marquee shifts by -50% so the loop is seamless */}
+          <div className="flex-1 min-w-0 overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)]">
+            <div className="flex w-max chant-marquee font-sanskrit text-saffron-400 text-[0.9rem]">
+              {[0, 1].map((half) => (
+                <span key={half} aria-hidden={half === 1} className="flex">
+                  {[0, 1, 2, 3].map((i) => (
+                    <span key={i} className="px-8 whitespace-nowrap">भज निताई-गौर राधे-श्याम, जपो हरे कृष्णा हरे राम</span>
+                  ))}
+                </span>
+              ))}
+            </div>
+          </div>
           <div className="flex items-center gap-4">
             <a href={`tel:${SITE.phones[0].replace(/\s/g, '')}`} className="inline-flex items-center gap-1.5 opacity-85 hover:opacity-100 hover:text-white transition-opacity whitespace-nowrap">
               <Phone className="w-3.5 h-3.5" />
@@ -162,8 +173,7 @@ export default function Header() {
                       <Link to="/events" className="block px-3 py-2 rounded-[10px] text-[0.9rem] text-ink-600 hover:bg-brand-soft hover:text-brand-deep">
                         Upcoming events
                       </Link>
-                      <Link to={EKADASHI_PATH} className="flex items-center gap-2 px-3 py-2 rounded-[10px] text-[0.9rem] text-ink-600 hover:bg-brand-soft hover:text-brand-deep">
-                        <Music2 className="w-4 h-4 text-saffron-500" aria-hidden />
+                      <Link to={EKADASHI_PATH} className="block px-3 py-2 rounded-[10px] text-[0.9rem] text-ink-600 hover:bg-brand-soft hover:text-brand-deep">
                         Ekadashi Kirtan List
                       </Link>
                     </div>
@@ -238,9 +248,8 @@ export default function Header() {
                       to={EKADASHI_PATH}
                       onClick={() => setMobileOpen(false)}
                       tabIndex={mobileOpen ? undefined : -1}
-                      className="flex items-center gap-2 pl-9 pr-5 py-3.5 border-b border-ink-800/10 text-[0.95rem] text-ink-600"
+                      className="block pl-9 pr-5 py-3.5 border-b border-ink-800/10 text-[0.95rem] text-ink-600"
                     >
-                      <Music2 className="w-4 h-4 text-saffron-500" aria-hidden />
                       Ekadashi Kirtan List
                     </Link>,
                   ]

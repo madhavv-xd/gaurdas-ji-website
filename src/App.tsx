@@ -41,7 +41,8 @@ function ScrollReveal() {
             setTimeout(() => el.classList.remove('reveal', 'in'), 1300);
           }
         }),
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      // threshold 0: a ratio threshold can never be met by sections taller than the viewport (e.g. the kirtan list)
+      { threshold: 0, rootMargin: '0px 0px -40px 0px' }
     );
     els.forEach((el) => {
       el.classList.add('reveal');
