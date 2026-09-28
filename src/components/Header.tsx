@@ -17,8 +17,12 @@ import {
   Image,
   ChevronDown,
 } from 'lucide-react';
-import { NAV_LINKS, SITE, IMAGES, LIVE_KATHA_YT, ytWatch } from '@/data/content';
+import { NAV_LINKS, SITE, IMAGES, LIVE_KATHA_YT, ytWatch, ytEmbed, EKADASHI_SHEET_URL } from '@/data/content';
 import { EKADASHI_PATH } from '@/components/EkadashiKirtan';
+import Modal from '@/components/Modal';
+
+// from apps-script/ekadashi-kirtan.gs ?view=live
+type LiveStream = { status: 'live' | 'upcoming' | 'none'; id?: string; title?: string; start?: number | null };
 
 const SOCIALS = [
   { href: SITE.social.youtube, label: 'YouTube', Icon: Youtube },
@@ -43,6 +47,18 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const headerRef = useRef<HTMLElement>(null);
+  const [stream, setStream] = useState<LiveStream>({ status: 'none' });
+  const [watching, setWatching] = useState(false);
+
+  // live / upcoming YouTube stream; on failure the button keeps linking to the default katha video
+  useEffect(() => {
+    fetch(`${EKADASHI_SHEET_URL}?view=live`)
+      .then((r) => r.json())
+      .then(setStream)
+      .catch(() => {});
+  }, []);
+  const hasStream = stream.status !== 'none' && !!stream.id;
+  const isLive = stream.status === 'live';
 
   useEffect(() => {
     let last = window.scrollY;
@@ -83,15 +99,35 @@ export default function Header() {
       {/* Utility bar */}
       <div className="bg-ink-900 text-[#d7e3ec] text-[0.8rem]">
         <div className="max-w-[1200px] mx-auto px-[22px] py-2 flex items-center justify-between gap-4">
-          <a
-            href={ytWatch(LIVE_KATHA_YT)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 font-semibold text-white whitespace-nowrap hover:text-saffron-400"
-          >
-            <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_0_4px_rgba(239,68,68,.25)] animate-pulse" />
-            Live Katha
-          </a>
+          {hasStream ? (
+            <button
+              onClick={() => setWatching(true)}
+              title={stream.title}
+              className="inline-flex items-center gap-2 font-semibold text-white whitespace-nowrap hover:text-saffron-400"
+            >
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  isLive ? 'bg-red-500 shadow-[0_0_0_4px_rgba(239,68,68,.25)] animate-pulse' : 'bg-saffron-400 shadow-[0_0_0_4px_rgba(244,167,51,.25)]'
+                }`}
+              />
+              {isLive ? 'Live Now' : 'Upcoming Live'}
+              {!isLive && stream.start && (
+                <span className="hidden md:inline font-normal opacity-80">
+                  · {new Date(stream.start * 1000).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' })}
+                </span>
+              )}
+            </button>
+          ) : (
+            <a
+              href={ytWatch(LIVE_KATHA_YT)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 font-semibold text-white whitespace-nowrap hover:text-saffron-400"
+            >
+              <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_0_4px_rgba(239,68,68,.25)] animate-pulse" />
+              Live Katha
+            </a>
+          )}
           {/* two identical halves; chant-marquee shifts by -50% so the loop is seamless */}
           <div className="flex-1 min-w-0 overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)]">
             <div className="flex w-max chant-marquee font-sanskrit text-saffron-400 text-[0.9rem]">
@@ -295,6 +331,26 @@ export default function Header() {
           )
         )}
       </nav>
+
+      <Modal open={watching} onClose={() => setWatching(false)} label={stream.title || 'Live Katha'}>
+        {watching && stream.id && (
+          <div>
+            <iframe
+              src={ytEmbed(stream.id)}
+              title={stream.title || 'Live Katha'}
+              className="w-full aspect-video rounded-xl shadow-2xl bg-ink-900"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+              <p className="text-white font-medium max-w-[60ch]">{stream.title}</p>
+              <a href={ytWatch(stream.id)} target="_blank" rel="noopener noreferrer" className="btn-ghost !py-2 !px-4 !text-sm">
+                <Youtube className="w-4 h-4" /> Open in YouTube
+              </a>
+            </div>
+          </div>
+        )}
+      </Modal>
     </>
   );
 }

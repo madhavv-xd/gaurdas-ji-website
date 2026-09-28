@@ -22,6 +22,7 @@ import NotFound from '@/pages/NotFound';
 import EkadashiKirtanList from '@/pages/EkadashiKirtanList';
 import EkadashiKirtanAdmin from '@/pages/EkadashiKirtanAdmin';
 import SevaHisab from '@/pages/SevaHisab';
+import Launch from '@/pages/Launch';
 
 // Fades up every section's content container (and anything marked data-reveal) as it scrolls into view.
 function ScrollReveal() {
@@ -108,7 +109,11 @@ function Shell() {
 }
 
 // A data router (not <BrowserRouter>) so <Link viewTransition> works; the pages' own <Routes> stay in Shell.
-const router = createBrowserRouter([{ path: '*', element: <Shell /> }]);
+// /launch is the full-screen launch ceremony page, so it sits outside the header/footer shell.
+const router = createBrowserRouter([
+  { path: '/launch', element: <Launch /> },
+  { path: '*', element: <Shell /> },
+]);
 
 function App() {
   return <RouterProvider router={router} />;
