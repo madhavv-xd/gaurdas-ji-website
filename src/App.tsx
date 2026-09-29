@@ -4,6 +4,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import BackToTop from '@/components/BackToTop';
 import CursorTrail from '@/components/CursorTrail';
+import LaunchFireworks from '@/components/LaunchFireworks';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import Home from '@/pages/Home';
 import About from '@/pages/About';
@@ -104,6 +105,7 @@ function Shell() {
       <Footer />
       <BackToTop />
       <CursorTrail />
+      <LaunchFireworks />
     </div>
   );
 }
