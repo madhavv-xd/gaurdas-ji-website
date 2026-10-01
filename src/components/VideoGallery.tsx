@@ -3,6 +3,7 @@ import { Play, Facebook, Twitter, MessageCircle, Youtube, ChevronLeft, ChevronRi
 import Modal from '@/components/Modal';
 import SearchField from '@/components/SearchField';
 import { useQueryParam } from '@/lib/useQueryParam';
+import { matches } from '@/lib/search';
 import { ytThumb, ytEmbed, ytWatch } from '@/data/content';
 
 export type VideoItem = { id: number; title: string; yt: string };
@@ -31,8 +32,7 @@ export default function VideoGallery({ items, searchPlaceholder, pageSize = 12 }
   const [shown, setShown] = useState(pageSize);
   const [playing, setPlaying] = useState<VideoItem | null>(null);
 
-  const q = query.trim().toLowerCase();
-  const filtered = q ? items.filter((v) => v.title.toLowerCase().includes(q)) : items;
+  const filtered = query ? items.filter((v) => matches(v.title, query)) : items;
   const at = playing ? filtered.findIndex((v) => v.id === playing.id) : -1;
   const step = (n: number) => at >= 0 && setPlaying(filtered[(at + n + filtered.length) % filtered.length]);
 

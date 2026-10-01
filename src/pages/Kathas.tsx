@@ -4,12 +4,12 @@ import PageHero from '@/components/PageHero';
 import SectionHeading from '@/components/SectionHeading';
 import SearchField from '@/components/SearchField';
 import { useQueryParam } from '@/lib/useQueryParam';
+import { matches } from '@/lib/search';
 import { CATEGORIES, KATHAS, VIDEOS, IMAGES } from '@/data/content';
 
 export default function Kathas() {
   const [query, setQuery] = useQueryParam();
-  const q = query.trim().toLowerCase();
-  const filtered = CATEGORIES.filter((c) => c.name.toLowerCase().includes(q));
+  const filtered = CATEGORIES.filter((c) => matches(c.name, query));
 
   return (
     <div>
@@ -72,7 +72,7 @@ export default function Kathas() {
           <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl text-white leading-tight text-balance mb-3">
             Want to attend a Katha?
           </h2>
-          <p className="text-lg text-cream-200 mb-6 max-w-2xl mx-auto">See the upcoming events and plan your visit.</p>
+          <p className="text-lg text-cream-200 mb-6 max-w-2xl mx-auto">See the upcoming kathas and plan your visit.</p>
           <Link to="/events" className="btn-saffron">
             View Events <ArrowRight className="w-4 h-4" />
           </Link>

@@ -31,8 +31,20 @@ const SOCIALS = [
   { href: SITE.social.dailymotion, label: 'Dailymotion', Icon: Tv },
 ];
 
-// Guru Parampara stays in the footer only
+// Guru Parampara lives in the About dropdown (and the footer)
 const MENU = NAV_LINKS.filter((l) => l.path !== '/about-guru-ji');
+
+// desktop dropdowns; in the mobile drawer the entries other than the parent page are indented under it
+const SUBMENUS: Record<string, { label: string; path: string }[]> = {
+  '/about-shri-gaurdasji': [
+    { label: 'Shri Gaurdas Ji Maharaj', path: '/about-shri-gaurdasji' },
+    { label: 'Guru Parampara', path: '/about-guru-ji' },
+  ],
+  '/events': [
+    { label: 'Upcoming kathas', path: '/events' },
+    { label: 'Ekadashi Kirtan List', path: EKADASHI_PATH },
+  ],
+};
 
 const APP_BAR = [
   { label: 'Home', path: '/', icon: HomeIcon },
@@ -179,23 +191,25 @@ export default function Header() {
 
           <nav aria-label="Main" className="hidden xl:flex items-center">
             {MENU.map((link) => {
+              const sub = SUBMENUS[link.path];
+              const active = sub ? sub.some((s) => isActive(s.path)) : isActive(link.path);
               const item = (
                 <Link
                   key={link.path}
                   to={link.path}
-                  aria-current={isActive(link.path) ? 'page' : undefined}
+                  aria-current={active ? 'page' : undefined}
                   className={`relative inline-flex items-center gap-1 px-3 py-2 text-[0.92rem] font-medium rounded-[10px] transition-colors ${
-                    isActive(link.path)
+                    active
                       ? 'text-brand-deep bg-brand-soft'
                       : 'text-ink-600 hover:bg-brand-soft hover:text-brand-deep'
                   }`}
                 >
                   {link.label}
-                  {link.path === '/events' && <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" aria-hidden />}
+                  {sub && <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" aria-hidden />}
                 </Link>
               );
-              if (link.path !== '/events') return item;
-              // Events dropdown: opens on hover and on keyboard focus (Tab from "Events" into the menu).
+              if (!sub) return item;
+              // Dropdown: opens on hover and on keyboard focus (Tab from the trigger into the menu).
               // The trigger is a button, not a link, so clicking it keeps you on the current page.
               return (
                 <div key={link.path} className="group relative">
@@ -205,12 +219,11 @@ export default function Header() {
                   </button>
                   <div className="absolute left-0 top-full pt-2 invisible opacity-0 translate-y-1 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0 group-focus-within:visible group-focus-within:opacity-100 group-focus-within:translate-y-0 transition-[opacity,transform,visibility] duration-200">
                     <div className="min-w-[210px] bg-white rounded-[14px] p-1.5 ring-1 ring-gold/25 shadow-lift">
-                      <Link to="/events" className="block px-3 py-2 rounded-[10px] text-[0.9rem] text-ink-600 hover:bg-brand-soft hover:text-brand-deep">
-                        Upcoming events
-                      </Link>
-                      <Link to={EKADASHI_PATH} className="block px-3 py-2 rounded-[10px] text-[0.9rem] text-ink-600 hover:bg-brand-soft hover:text-brand-deep">
-                        Ekadashi Kirtan List
-                      </Link>
+                      {sub.map((s) => (
+                        <Link key={s.path} to={s.path} className="block px-3 py-2 rounded-[10px] text-[0.9rem] text-ink-600 hover:bg-brand-soft hover:text-brand-deep">
+                          {s.label}
+                        </Link>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -274,22 +287,22 @@ export default function Header() {
               >
                 {link.label}
               </Link>
-            )).flatMap((el, i) =>
-              MENU[i].path === '/events'
-                ? [
-                    el,
-                    <Link
-                      key="ekadashi"
-                      to={EKADASHI_PATH}
-                      onClick={() => setMobileOpen(false)}
-                      tabIndex={mobileOpen ? undefined : -1}
-                      className="block pl-9 pr-5 py-3.5 border-b border-ink-800/10 text-[0.95rem] text-ink-600"
-                    >
-                      Ekadashi Kirtan List
-                    </Link>,
-                  ]
-                : [el],
-            )}
+            )).flatMap((el, i) => [
+              el,
+              ...(SUBMENUS[MENU[i].path] ?? [])
+                .filter((s) => s.path !== MENU[i].path)
+                .map((s) => (
+                  <Link
+                    key={s.path}
+                    to={s.path}
+                    onClick={() => setMobileOpen(false)}
+                    tabIndex={mobileOpen ? undefined : -1}
+                    className="block pl-9 pr-5 py-3.5 border-b border-ink-800/10 text-[0.95rem] text-ink-600"
+                  >
+                    {s.label}
+                  </Link>
+                )),
+            ])}
           </nav>
           <div className="p-5">
             <Link to="/donate-us" tabIndex={mobileOpen ? undefined : -1} className="btn-saffron w-full mb-3">

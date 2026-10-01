@@ -33,8 +33,8 @@ export default function KathaDetail() {
 
           <div role="tablist" aria-label="Events" className="flex justify-center gap-2 mb-10">
             {([
-              ['upcoming', 'Upcoming Events'],
-              ['done', 'Previous Events'],
+              ['upcoming', 'Upcoming Kathas'],
+              ['done', 'Previous Kathas'],
             ] as const).map(([key, label]) => (
               <button
                 key={key}
@@ -60,8 +60,8 @@ export default function KathaDetail() {
             </div>
           ) : (
             <div role="tabpanel" className="text-center py-10">
-              <p className="text-ink-400">No upcoming events for this katha yet.</p>
-              <Link to="/events" className="btn-outline mt-4">See all upcoming events</Link>
+              <p className="text-ink-400">No upcoming kathas in this category yet.</p>
+              <Link to="/events" className="btn-outline mt-4">See all upcoming kathas</Link>
             </div>
           )}
         </div>

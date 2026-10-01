@@ -12,7 +12,7 @@ export default function NotFound() {
       <p className="text-ink-400 mb-8">This page may have moved. Try the kathas or events listings.</p>
       <div className="flex justify-center gap-3 flex-wrap">
         <Link to="/" className="btn-saffron">Back to Home</Link>
-        <Link to="/events" className="btn-outline">Upcoming Events</Link>
+        <Link to="/events" className="btn-outline">Upcoming Kathas</Link>
       </div>
     </section>
   );

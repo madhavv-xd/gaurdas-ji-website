@@ -4,6 +4,7 @@ import PageHero from '@/components/PageHero';
 import SectionHeading from '@/components/SectionHeading';
 import SearchField from '@/components/SearchField';
 import { useQueryParam } from '@/lib/useQueryParam';
+import { matches } from '@/lib/search';
 import EventCard from '@/components/EventCard';
 import { KATHAS, VIDEOS, IMAGES } from '@/data/content';
 
@@ -11,22 +12,21 @@ const upcoming = KATHAS.filter((k) => k.status === 'upcoming');
 
 export default function Events() {
   const [query, setQuery] = useQueryParam();
-  const q = query.trim().toLowerCase();
-  const filtered = upcoming.filter((k) => `${k.name} ${k.location}`.toLowerCase().includes(q));
+  const filtered = upcoming.filter((k) => matches(`${k.name} ${k.location}`, query));
 
   return (
     <div>
       <PageHero
         breadcrumb="Watch and listen"
-        title="Upcoming Events"
+        title="Upcoming Kathas"
         subtitle="Where Shri Gaurdas Ji Maharaj’s next kathas will be held."
         image={IMAGES.gaurdasji3}
       />
 
       <section className="py-10 sm:py-14 bg-cream-50">
         <div className="max-w-[1200px] mx-auto px-[22px]">
-          <SectionHeading eyebrow="Events" title="Upcoming Event's" />
-          <SearchField label="Search upcoming events by title" value={query} onChange={setQuery} suggestions={upcoming.map((k) => k.name)} />
+          <SectionHeading eyebrow="Events" title="Upcoming Kathas" />
+          <SearchField label="Search upcoming kathas by title" value={query} onChange={setQuery} suggestions={upcoming.map((k) => k.name)} />
 
           {filtered.length > 0 ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -37,7 +37,7 @@ export default function Events() {
               ))}
             </div>
           ) : (
-            <p className="text-center text-ink-400 py-10">{q ? `No events match “${query}”.` : 'No upcoming events right now.'}</p>
+            <p className="text-center text-ink-400 py-10">{query.trim() ? `No events match “${query}”.` : 'No upcoming kathas right now.'}</p>
           )}
         </div>
       </section>
@@ -49,9 +49,9 @@ export default function Events() {
           <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl text-white leading-tight text-balance mb-3">
             Missed a katha?
           </h2>
-          <p className="text-lg text-cream-200 mb-6 max-w-2xl mx-auto">Watch {VIDEOS.length} recordings from previous events.</p>
+          <p className="text-lg text-cream-200 mb-6 max-w-2xl mx-auto">Watch {VIDEOS.length} recordings from previous kathas.</p>
           <Link to="/previous-event" className="btn-saffron">
-            Previous Events <ArrowRight className="w-4 h-4" />
+            Previous Kathas <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>

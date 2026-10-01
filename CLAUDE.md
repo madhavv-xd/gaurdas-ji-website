@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run build` — production build (`vite build`; does not typecheck)
 - `npm run typecheck` — `tsc --noEmit -p tsconfig.app.json`
 - `npm run lint` — ESLint
-- No test runner is configured.
+- `npm test` — runs `src/lib/search.check.ts` (plain asserts, Node type-stripping); there is no test framework.
 
 ## Architecture
 
@@ -17,6 +17,7 @@ Static, content-driven marketing site for Shri Gaurdas Ji Maharaj (Bolt.new Vite
 - `src/App.tsx` declares all routes (Home, Information, Kathas, Events, Bhajan, Gallery, GuruParampara, Contact) inside a shared `Header` / `Footer` layout. Adding a page means: new file in `src/pages/`, a `<Route>` in `App.tsx`, and an entry in `NAV_LINKS`.
 - `src/data/content.ts` is the single source of truth for all site copy and data: `SITE` (contact info, social links), `IMAGES` (remote Pexels URLs), `NAV_LINKS`, `KATHAS`, `EVENTS`, `GALLERY_ITEMS`, `GURU_PARAMPARA`, `BHAJANS`, schedules, `SEVA_OPTIONS`, `NEWS_ITEMS`. Pages import from it; edit content there, not in the page components.
 - `src/components/PageHero.tsx` is the shared inner-page hero (also scrolls to top on mount, which is how route changes reset scroll).
+- Every search box filters with `matches()` from `src/lib/search.ts`, which matches across Devanagari / Hinglish / spelling variants (radha = राधा, Brindaban = Vrindavan). Use it for new search boxes; fix a missed spelling by adding a rule to `fold()`.
 - Imports use the `@/` alias for `src/` (configured in both `vite.config.ts` and `tsconfig.app.json`); prefer it over relative paths.
 
 ## Styling

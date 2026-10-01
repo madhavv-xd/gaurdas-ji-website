@@ -10,15 +10,15 @@ export default function PreviousEvents() {
     <div>
       <PageHero
         breadcrumb="Events"
-        title="Previous Events"
+        title="Previous Kathas"
         subtitle="Recordings of every katha day — watch, listen and share."
         image={IMAGES.heroGaurdasji}
         crumbs={[{ label: 'Events', to: '/events' }]}
       />
       <section className="py-10 sm:py-14 bg-cream-50">
         <div className="max-w-[1200px] mx-auto px-[22px]">
-          <SectionHeading eyebrow="Events" title="Previous Events" />
-          <VideoGallery items={items} searchPlaceholder="Search previous events by title" />
+          <SectionHeading eyebrow="Events" title="Previous Kathas" />
+          <VideoGallery items={items} searchPlaceholder="Search previous kathas by title" />
         </div>
       </section>
     </div>

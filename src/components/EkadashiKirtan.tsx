@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { CalendarDays, Loader2, Search, X, ArrowRight, Clock, Phone } from 'lucide-react';
 import { EKADASHI_SHEET_URL } from '@/data/content';
 import { PERIODS, periodOf, startMinutes, type Period } from '@/lib/kirtanTime';
+import { matches } from '@/lib/search';
 
 // Column names match the sheet's header row. Hidden = "TRUE" hides the row from the public list (admin still sees it).
 export const COLUMNS = ['Name', 'Address', 'PhoneNumber', 'City', 'State', 'Country', 'Timings', 'Hidden'] as const;
@@ -325,13 +326,12 @@ export function KirtanTables({
     );
 
   const all = rows ?? [];
-  const needle = norm(q);
   const inCountry = all.filter((r) => !country || norm(r.Country) === country);
   const inState = inCountry.filter((r) => !state || norm(r.State) === state);
   const periodCount = (id: Period) => inState.filter((r) => periodOf(startMinutes(r.Timings)) === id).length;
   const shown = inState
     .filter((r) => !time || periodOf(startMinutes(r.Timings)) === time)
-    .filter((r) => !needle || [r.Name, r.Address, r.City, r.State, r.Country].some((v) => v.toLowerCase().includes(needle)))
+    .filter((r) => [r.Name, r.Address, r.City, r.State, r.Country].some((v) => matches(v, q)))
     .sort(COMPARE[sort]);
   const filtered = !!(q || country || state || time);
 

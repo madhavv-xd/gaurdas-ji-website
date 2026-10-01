@@ -15,6 +15,7 @@ import Events from '@/pages/Events';
 import EventDetail from '@/pages/EventDetail';
 import PreviousEvents from '@/pages/PreviousEvents';
 import Bhajan from '@/pages/Bhajan';
+import Books from '@/pages/Books';
 import Gallery from '@/pages/Gallery';
 import Contact from '@/pages/Contact';
 import NitaiDas from '@/pages/NitaiDas';
@@ -90,6 +91,7 @@ function Shell() {
               <Route path="/event-detail/:id" element={<EventDetail />} />
               <Route path="/previous-event" element={<PreviousEvents />} />
               <Route path="/bhajan" element={<Bhajan />} />
+              <Route path="/books" element={<Books />} />
               <Route path="/photos" element={<Gallery />} />
               <Route path="/shri-nitai-das-ji-maharaj" element={<NitaiDas />} />
               <Route path="/contact-us" element={<Contact />} />

@@ -83,6 +83,7 @@ export const NAV_LINKS = [
   { label: 'Kathas', path: '/all-kathas' },
   { label: 'Events', path: '/events' },
   { label: 'Bhajans', path: '/bhajan' },
+  { label: 'Books', path: '/books' },
   { label: 'Gallery', path: '/photos' },
   { label: 'Contact Us', path: '/contact-us' },
 ];

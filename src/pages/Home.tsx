@@ -87,7 +87,7 @@ const SLIDES: Slide[] = [
     title: 'Listen to Maharaj Ji’s Bhajans',
     sub: `${BHAJANS.length} bhajans and kirtans, plus recordings of every katha day.`,
     primary: { label: 'Listen to Bhajans', to: '/bhajan' },
-    secondary: { label: 'Previous Events', to: '/previous-event' },
+    secondary: { label: 'Previous Kathas', to: '/previous-event' },
   },
 ];
 
@@ -349,8 +349,8 @@ export default function Home() {
       {upcoming.length > 0 && (
         <section className="py-10 sm:py-14">
           <div className="max-w-[1200px] mx-auto px-[22px]">
-            <SectionHeading eyebrow="Events" title="All Upcoming Events" />
-            <CardStack label="Upcoming events">
+            <SectionHeading eyebrow="Events" title="All Upcoming Kathas" />
+            <CardStack label="Upcoming kathas">
               {upcoming.map((k) => (
                 <PosterCard key={k.id} to={`/event-detail/${k.id}`} image={k.images[0] ?? CATEGORIES.find((c) => c.id === k.categoryId)?.image ?? IMAGES.heroKatha} badge="Upcoming">
                   {categoryName(k.categoryId) && <p className="font-sanskrit text-saffron-300 text-sm mb-1">{categoryName(k.categoryId)}</p>}
@@ -378,7 +378,7 @@ export default function Home() {
       {/* PREVIOUS EVENTS */}
       <section className="py-10 sm:py-14 bg-cream-100">
         <div className="max-w-[1200px] mx-auto px-[22px]">
-          <SectionHeading eyebrow="Events" title="Previous Events" description="Recordings from recent kathas — tap any video to watch." />
+          <SectionHeading eyebrow="Events" title="Previous Kathas" description="Recordings from recent kathas — tap any video to watch." />
           <VideoGallery items={VIDEOS.slice(0, 6).map((v) => ({ id: v.id, title: v.name, yt: v.yt }))} />
           <div className="text-center mt-10">
             <Link to="/previous-event" className="btn-saffron">
