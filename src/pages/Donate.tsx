@@ -13,7 +13,7 @@ export default function Donate() {
         image={IMAGES.heroGaurdasji}
       />
 
-      <section className="py-[52px] sm:py-[76px] bg-cream-50">
+      <section className="py-10 sm:py-14 bg-cream-50">
         <div className="max-w-[1000px] mx-auto px-[22px]">
           <DonatePanel />
         </div>

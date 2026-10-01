@@ -23,7 +23,7 @@ export default function GuruParampara() {
         image={IMAGES.heroKatha}
       />
 
-      <section className="py-[52px] sm:py-[76px] bg-cream-100">
+      <section className="py-10 sm:py-14 bg-cream-100">
         <div className="max-w-[1100px] mx-auto px-[22px]">
           <SectionHeading eyebrow="Guru Parampara" title="गुरु परम्परा" />
           <div className="grid md:grid-cols-2 gap-6">

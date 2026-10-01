@@ -58,7 +58,7 @@ export default function SevaHisab() {
   const [data, setData] = useState<Data | null>(null);
 
   return (
-    <section className="py-[52px] sm:py-[76px] bg-cream-50 min-h-[70vh]">
+    <section className="py-10 sm:py-14 bg-cream-50 min-h-[70vh]">
       <div className="max-w-[1200px] mx-auto px-[22px]">
         <h1 className="font-serif-display text-[clamp(2rem,4vw,3rem)] text-ink-800 mb-6">Seva Hisab</h1>
         {creds && data ? (

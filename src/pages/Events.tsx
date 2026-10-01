@@ -23,7 +23,7 @@ export default function Events() {
         image={IMAGES.gaurdasji3}
       />
 
-      <section className="py-[52px] sm:py-[76px] bg-cream-50">
+      <section className="py-10 sm:py-14 bg-cream-50">
         <div className="max-w-[1200px] mx-auto px-[22px]">
           <SectionHeading eyebrow="Events" title="Upcoming Event's" />
           <SearchField label="Search upcoming events by title" value={query} onChange={setQuery} suggestions={upcoming.map((k) => k.name)} />
@@ -42,7 +42,7 @@ export default function Events() {
         </div>
       </section>
 
-      <section className="py-16 bg-ink-800 relative overflow-hidden">
+      <section className="py-12 bg-ink-800 relative overflow-hidden">
         <div className="absolute inset-0 bg-hero-pattern opacity-20" />
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <Video className="w-12 h-12 text-saffron-400 mx-auto mb-4" />

@@ -20,7 +20,7 @@ export default function Kathas() {
         image={IMAGES.heroKatha}
       />
 
-      <section className="py-[52px] sm:py-[76px] bg-cream-50">
+      <section className="py-10 sm:py-14 bg-cream-50">
         <div className="max-w-[1100px] mx-auto px-[22px]">
           <SectionHeading eyebrow="Our Katha's" title="Katha Series" />
           <SearchField label="Search kathas by title" value={query} onChange={setQuery} suggestions={CATEGORIES.map((c) => c.name)} />
@@ -63,7 +63,7 @@ export default function Kathas() {
         </div>
       </section>
 
-      <section className="py-16 bg-ink-800 relative overflow-hidden">
+      <section className="py-12 bg-ink-800 relative overflow-hidden">
         <div className="absolute inset-0 bg-hero-pattern opacity-20" />
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <div className="w-16 h-16 rounded-2xl bg-saffron-500 flex items-center justify-center mx-auto mb-5">

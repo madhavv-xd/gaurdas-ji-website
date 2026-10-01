@@ -89,6 +89,8 @@ export const NAV_LINKS = [
 
 export const ytThumb = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 export const ytEmbed = (id: string) => `https://www.youtube.com/embed/${id}?autoplay=1`;
+// YouTube redirects this to whatever is live now, or the next scheduled stream
+export const YT_LIVE_URL = 'https://www.youtube.com/channel/UCQwolHStEkxLkDcm1xvLdAw/live';
 export const ytWatch = (id: string) => `https://www.youtube.com/watch?v=${id}`;
 export const mapsDir = (place: string) => `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(place)}`;
 

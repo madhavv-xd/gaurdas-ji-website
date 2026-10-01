@@ -57,7 +57,7 @@ export default function Contact() {
         image={IMAGES.gaurdasji1}
       />
 
-      <section className="py-16 lg:py-24 bg-cream-50">
+      <section className="py-10 sm:py-14 bg-cream-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-5 gap-8">
             {/* Contact info */}

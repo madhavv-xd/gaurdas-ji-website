@@ -46,7 +46,7 @@ export default function EventDetail() {
         image={IMAGES.heroKatha}
       />
 
-      <section className="py-[52px] sm:py-[76px] bg-cream-50">
+      <section className="py-10 sm:py-14 bg-cream-50">
         <div className="max-w-[1200px] mx-auto px-[22px] grid lg:grid-cols-[1.4fr_1fr] gap-10 items-start">
           <div className="min-w-0">
             {katha.images.map((src) => (
@@ -83,7 +83,7 @@ export default function EventDetail() {
         </div>
       </section>
 
-      <section className="py-[52px] sm:py-[76px] bg-cream-100">
+      <section className="py-10 sm:py-14 bg-cream-100">
         <div className="max-w-[1200px] mx-auto px-[22px]">
           {videos.length > 0 ? (
             <>

@@ -51,7 +51,7 @@ export default function CardCarousel({ label, children }: { label: string; child
       <div
         ref={track}
         onScroll={onScroll}
-        className="relative flex gap-5 overflow-x-auto snap-x snap-mandatory py-6 px-[calc(50%-130px)] sm:px-[calc(50%-150px)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]"
+        className="relative flex gap-5 overflow-x-auto snap-x snap-mandatory py-6 -mt-6 px-[calc(50%-130px)] sm:px-[calc(50%-150px)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]"
       >
         {[...slides, ...slides, ...slides].map((s, i) => (
           <div

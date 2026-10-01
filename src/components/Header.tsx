@@ -5,7 +5,6 @@ import {
   X,
   Heart,
   Phone,
-  Mail,
   Youtube,
   Facebook,
   Instagram,
@@ -17,7 +16,7 @@ import {
   Image,
   ChevronDown,
 } from 'lucide-react';
-import { NAV_LINKS, SITE, IMAGES, LIVE_KATHA_YT, ytWatch, ytEmbed, EKADASHI_SHEET_URL } from '@/data/content';
+import { NAV_LINKS, SITE, IMAGES, YT_LIVE_URL, ytWatch, ytEmbed, EKADASHI_SHEET_URL } from '@/data/content';
 import { EKADASHI_PATH } from '@/components/EkadashiKirtan';
 import Modal from '@/components/Modal';
 
@@ -31,6 +30,9 @@ const SOCIALS = [
   { href: SITE.social.twitter, label: 'X (Twitter)', Icon: Twitter },
   { href: SITE.social.dailymotion, label: 'Dailymotion', Icon: Tv },
 ];
+
+// Guru Parampara stays in the footer only
+const MENU = NAV_LINKS.filter((l) => l.path !== '/about-guru-ji');
 
 const APP_BAR = [
   { label: 'Home', path: '/', icon: HomeIcon },
@@ -98,6 +100,7 @@ export default function Header() {
     <>
       {/* Utility bar */}
       <div className="bg-ink-900 text-[#d7e3ec] text-[0.8rem]">
+        <p className="pt-2 text-center font-sanskrit text-saffron-400 text-[0.95rem] leading-none">श्री राधा रमणों जयति</p>
         <div className="max-w-[1200px] mx-auto px-[22px] py-2 flex items-center justify-between gap-4">
           {hasStream ? (
             <button
@@ -119,7 +122,7 @@ export default function Header() {
             </button>
           ) : (
             <a
-              href={ytWatch(LIVE_KATHA_YT)}
+              href={YT_LIVE_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 font-semibold text-white whitespace-nowrap hover:text-saffron-400"
@@ -144,10 +147,6 @@ export default function Header() {
             <a href={`tel:${SITE.phones[0].replace(/\s/g, '')}`} className="inline-flex items-center gap-1.5 opacity-85 hover:opacity-100 hover:text-white transition-opacity whitespace-nowrap">
               <Phone className="w-3.5 h-3.5" />
               {SITE.phones[0]}
-            </a>
-            <a href={`mailto:${SITE.email}`} className="hidden lg:inline-flex items-center gap-1.5 opacity-85 hover:opacity-100 hover:text-white transition-opacity">
-              <Mail className="w-3.5 h-3.5" />
-              {SITE.email}
             </a>
             <div className="hidden sm:flex gap-3">
               {SOCIALS.map(({ href, label, Icon }) => (
@@ -179,7 +178,7 @@ export default function Header() {
           </Link>
 
           <nav aria-label="Main" className="hidden xl:flex items-center">
-            {NAV_LINKS.map((link) => {
+            {MENU.map((link) => {
               const item = (
                 <Link
                   key={link.path}
@@ -262,7 +261,7 @@ export default function Header() {
             </button>
           </div>
           <nav aria-label="Main" className="flex-1 overflow-y-auto">
-            {NAV_LINKS.map((link, i) => (
+            {MENU.map((link, i) => (
               <Link
                 key={link.path}
                 to={link.path}
@@ -276,7 +275,7 @@ export default function Header() {
                 {link.label}
               </Link>
             )).flatMap((el, i) =>
-              NAV_LINKS[i].path === '/events'
+              MENU[i].path === '/events'
                 ? [
                     el,
                     <Link

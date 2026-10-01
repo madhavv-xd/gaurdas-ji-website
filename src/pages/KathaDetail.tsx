@@ -25,7 +25,7 @@ export default function KathaDetail() {
         vtName={`katha-${category.id}`}
       />
 
-      <section className="py-[52px] sm:py-[76px] bg-cream-50">
+      <section className="py-10 sm:py-14 bg-cream-50">
         <div className="max-w-[1200px] mx-auto px-[22px]">
           {category.description && (
             <div className="rich text-ink-500 max-w-3xl mb-10" dangerouslySetInnerHTML={{ __html: category.description }} />

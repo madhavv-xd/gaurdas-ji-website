@@ -21,7 +21,7 @@ export default function Gallery() {
         image={IMAGES.heroGaurdasji}
       />
 
-      <section className="py-[52px] sm:py-[76px] bg-cream-50">
+      <section className="py-10 sm:py-14 bg-cream-50">
         <div className="max-w-[1200px] mx-auto px-[22px]">
           <SectionHeading eyebrow="Gallery" title="Photos" />
           <ul className="columns-2 md:columns-3 gap-3 sm:gap-4 [&>li]:mb-3 sm:[&>li]:mb-4">

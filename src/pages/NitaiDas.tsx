@@ -36,7 +36,7 @@ export default function NitaiDas() {
         subtitle="Katha recordings by Shri Nitai Das Ji Maharaj."
         image={IMAGES.kathaPortrait}
       />
-      <section className="py-[52px] sm:py-[76px] bg-cream-50">
+      <section className="py-10 sm:py-14 bg-cream-50">
         <div className="max-w-[1200px] mx-auto px-[22px]">
           {open ? (
             <>

@@ -32,8 +32,7 @@ import {
   KATHAS,
   VIDEOS,
   BHAJANS,
-  LIVE_KATHA_YT,
-  ytWatch,
+  YT_LIVE_URL,
   mapsDir,
 } from '@/data/content';
 
@@ -156,7 +155,7 @@ function HeroSlider() {
       ))}
       <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(9,24,36,.6),transparent_34%)] pointer-events-none" />
 
-      <div className="relative z-10 max-w-[1200px] w-full mx-auto px-[22px] py-16 lg:py-24 flex items-center">
+      <div className="relative z-10 max-w-[1200px] w-full mx-auto px-[22px] py-12 lg:py-16 flex items-center">
         <div key={cur} className="text-white max-w-[660px]" aria-live={paused ? 'polite' : 'off'}>
           {s.badge && (
             <span className="inline-flex items-center gap-2 bg-saffron-500/20 border border-saffron-400/55 text-[#ffd9a8] px-4 py-1.5 rounded-full text-[0.8rem] font-semibold mb-4 animate-fade-up">
@@ -247,13 +246,13 @@ export default function Home() {
       <section className="bg-ink-900 text-white">
         <div className="max-w-[1200px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { icon: Radio, title: 'Live Katha', sub: 'Watch live on YouTube', href: ytWatch(LIVE_KATHA_YT) },
+            { icon: Radio, title: 'Live Katha', sub: 'Watch live on YouTube', href: YT_LIVE_URL },
             { icon: BookOpen, title: 'Kathas', sub: 'Watch & listen', to: '/all-kathas' },
             { icon: Music, title: 'Bhajans & Kirtan', sub: `${BHAJANS.length} bhajans`, to: '/bhajan' },
             { icon: Heart, title: 'Donate', sub: 'UPI or bank transfer', to: '/donate-us' },
           ].map(({ icon: Icon, title, sub, to, href }) => {
             const cls =
-              'group flex items-center gap-3.5 px-5 py-[22px] border-b sm:border-b-0 lg:border-r last:border-0 border-white/15 hover:bg-white/[.07] transition-colors';
+              'group flex items-center gap-3.5 px-[22px] py-[22px] border-b sm:border-b-0 lg:border-r last:border-0 border-white/15 hover:bg-white/[.07] transition-colors';
             const inner = (
               <>
                 <span className="w-11 h-11 flex-none rounded-xl bg-white/15 flex items-center justify-center">
@@ -275,8 +274,8 @@ export default function Home() {
       </section>
 
       {/* ABOUT */}
-      <section className="py-[52px] sm:py-[76px]">
-        <div className="max-w-[1200px] mx-auto px-[22px] grid lg:grid-cols-[0.8fr_1.2fr] gap-14 items-center">
+      <section className="py-10 sm:py-14">
+        <div className="max-w-[1200px] mx-auto px-[22px] grid lg:grid-cols-[0.8fr_1.2fr] gap-10 items-center">
           <div className="relative max-w-[420px] mx-auto w-full" data-reveal>
             <img src={IMAGES.about[0]} alt="Shri Gaurdas Ji Maharaj" className="rounded-[22px] shadow-lift w-full aspect-[4/5] object-cover object-top" />
             <div className="absolute inset-3.5 border border-gold/50 rounded-[18px] pointer-events-none" />
@@ -295,7 +294,7 @@ export default function Home() {
       </section>
 
       {/* GURU PARAMPARA */}
-      <section className="py-[52px] sm:py-[76px] bg-ink-900 text-white">
+      <section className="py-10 sm:py-14 bg-ink-900 text-white">
         <div className="max-w-[1200px] mx-auto px-[22px]">
           <SectionHeading eyebrow="Guru Parampara" title="गुरु परम्परा" light />
           <div className="max-w-[680px] mx-auto">
@@ -310,7 +309,7 @@ export default function Home() {
       </section>
 
       {/* KATHAS — every katha series, as a carousel */}
-      <section className="py-[52px] sm:py-[76px] bg-cream-100">
+      <section className="py-10 sm:py-14 bg-cream-100">
         <div className="max-w-[1200px] mx-auto px-[22px]">
           <SectionHeading
             eyebrow="Watch and listen"
@@ -348,7 +347,7 @@ export default function Home() {
 
       {/* UPCOMING EVENTS */}
       {upcoming.length > 0 && (
-        <section className="py-[52px] sm:py-[76px]">
+        <section className="py-10 sm:py-14">
           <div className="max-w-[1200px] mx-auto px-[22px]">
             <SectionHeading eyebrow="Events" title="All Upcoming Events" />
             <CardStack label="Upcoming events">
@@ -377,7 +376,7 @@ export default function Home() {
       )}
 
       {/* PREVIOUS EVENTS */}
-      <section className="py-[52px] sm:py-[76px] bg-cream-100">
+      <section className="py-10 sm:py-14 bg-cream-100">
         <div className="max-w-[1200px] mx-auto px-[22px]">
           <SectionHeading eyebrow="Events" title="Previous Events" description="Recordings from recent kathas — tap any video to watch." />
           <VideoGallery items={VIDEOS.slice(0, 6).map((v) => ({ id: v.id, title: v.name, yt: v.yt }))} />
@@ -390,7 +389,7 @@ export default function Home() {
       </section>
 
       {/* DONATE */}
-      <section className="py-[52px] sm:py-[76px] bg-[linear-gradient(120deg,#e8892b,#f4a733)] text-white">
+      <section className="py-10 sm:py-14 bg-[linear-gradient(120deg,#e8892b,#f4a733)] text-white">
         <div className="max-w-[1000px] mx-auto px-[22px] grid md:grid-cols-[auto_1fr] gap-10 items-center">
           <img src={IMAGES.qr} alt="Donation QR code" className="w-52 sm:w-60 mx-auto rounded-[18px] bg-white p-3 shadow-lift" data-reveal />
           <div data-reveal style={d(120)}>
@@ -409,7 +408,7 @@ export default function Home() {
       </section>
 
       {/* VISIT */}
-      <section className="py-[52px] sm:py-[76px]">
+      <section className="py-10 sm:py-14">
         <div className="max-w-[1200px] mx-auto px-[22px]">
           <SectionHeading eyebrow="Visit" title="Come to the Ashram" description={`${SITE.ashram}, Vrindavan`} />
           <div className="grid lg:grid-cols-[1.05fr_1fr] gap-10">

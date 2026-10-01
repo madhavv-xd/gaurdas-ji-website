@@ -11,7 +11,7 @@ export default function EkadashiKirtanAdmin() {
   const [creds, setCreds] = useState<Creds | null>(null);
 
   return (
-    <section className="py-[52px] sm:py-[76px] bg-cream-50 min-h-[70vh]">
+    <section className="py-10 sm:py-14 bg-cream-50 min-h-[70vh]">
       <div className="max-w-[1200px] mx-auto px-[22px]">
         <h1 className="font-serif-display text-[clamp(2rem,4vw,3rem)] text-ink-800 mb-6">Ekadashi Kirtan Admin</h1>
         {creds ? <Editor creds={creds} /> : <Login onLogin={setCreds} />}

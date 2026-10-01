@@ -13,7 +13,7 @@ export default function About() {
         image={IMAGES.gaurdasji1}
       />
 
-      <section className="py-[52px] sm:py-[76px]">
+      <section className="py-10 sm:py-14">
         <div className="max-w-[1200px] mx-auto px-[22px] grid lg:grid-cols-[0.75fr_1.25fr] gap-12 items-start">
           <div className="grid grid-cols-2 gap-4 lg:sticky lg:top-28">
             <img src={IMAGES.about[0]} alt="Shri Gaurdas Ji Maharaj" className="col-span-2 rounded-[22px] shadow-lift w-full aspect-[4/5] object-cover object-top" />
