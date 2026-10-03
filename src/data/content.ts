@@ -104,6 +104,9 @@ export const EKADASHI_SHEET_URL =
 export const SEVA_HISAB_URL =
   'https://script.google.com/macros/s/AKfycbxwN0szgLW7QFG_IzIoQ4ZOWhgw7i2KnDzlptwy8Ngm2beYIvoXOvKEPDQ4AC4fmY5-/exec';
 
-// Apps Script web app behind gaurkripadham.netlify.app/ShriNitaiDasJiMaharaj_Playlist; GET returns { kathas, videos }.
-export const NITAI_DAS_SHEET_URL =
-  'https://script.google.com/macros/s/AKfycbzewZ_kCtIFbmkA5N2-_X2B1uyCgs_f7cn0f1VNLoS0c7f5e9gDnIgzrJ9rl3I_039LFw/exec';
+// "Follow" band on /shri-nitai-das-ji-maharaj
+export const NITAI_SOCIAL = [
+  { label: 'YouTube', handle: '@nitaidas9756', action: 'Subscribe', href: 'https://www.youtube.com/@nitaidas9756/streams' },
+  { label: 'Instagram', handle: '@shrinitaidasji', action: 'Follow', href: 'https://www.instagram.com/shrinitaidasji' },
+  { label: 'Facebook', handle: 'Shri Nitai Das Ji', action: 'Follow', href: 'https://www.facebook.com/profile.php?id=61559301771645' },
+] as const;
