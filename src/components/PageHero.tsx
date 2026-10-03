@@ -19,7 +19,7 @@ export default function PageHero({ title, subtitle, image, breadcrumb, crumbs = 
   usePageTitle(docTitle ?? title);
 
   return (
-    <section className="relative min-h-[320px] flex items-center overflow-hidden bg-ink-900">
+    <section className="relative min-h-[390px] flex items-center overflow-hidden bg-ink-900">
       {/* image + tints move together in a view transition, so the hero never flashes undimmed */}
       <div className="absolute inset-0 [view-transition-class:hero-morph]" style={vtName ? { viewTransitionName: vtName } : undefined}>
         <img src={image} alt="" className="absolute inset-0 w-full h-full object-cover animate-[heroZoom_9s_ease-out_both]" />

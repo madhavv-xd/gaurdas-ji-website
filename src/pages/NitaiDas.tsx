@@ -4,7 +4,7 @@ import PageHero from '@/components/PageHero';
 import SectionHeading from '@/components/SectionHeading';
 import VideoGallery from '@/components/VideoGallery';
 import { usePlaylists, type Playlist } from '@/lib/usePlaylists';
-import { IMAGES, NITAI_SOCIAL } from '@/data/content';
+import { IMAGES, NITAI_ABOUT, NITAI_SOCIAL } from '@/data/content';
 
 const SOCIAL_ICONS = { YouTube: Youtube, Instagram, Facebook };
 const videoCount = (n: number) => `${n} ${n === 1 ? 'video' : 'videos'}`;
@@ -28,7 +28,7 @@ export default function NitaiDas() {
             <img src={IMAGES.nitaiDas} alt="" className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover ring-2 ring-gold" />
             <div>
               <h2 id="nitai-follow" className="text-2xl text-ink-800 leading-tight">Follow Nitai Das ji</h2>
-              <p className="text-sm text-ink-400">Live kathas, clips and updates</p>
+              <p className="text-sm text-ink-400">Live kathas and updates</p>
             </div>
           </div>
           <div className="grid sm:grid-cols-3 gap-3">
@@ -51,6 +51,14 @@ export default function NitaiDas() {
                 </a>
               );
             })}
+          </div>
+        </div>
+      </section>
+      <section className="py-10 sm:py-14 bg-white">
+        <div className="max-w-[1200px] mx-auto px-[22px]">
+          <SectionHeading title="About Shri Nitai Das Ji Maharaj" />
+          <div className="max-w-[70ch] mx-auto space-y-4 font-sanskrit text-ink-600 text-[1.05rem]">
+            {NITAI_ABOUT.map((p) => <p key={p}>{p}</p>)}
           </div>
         </div>
       </section>

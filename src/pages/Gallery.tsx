@@ -18,7 +18,7 @@ export default function Gallery() {
         breadcrumb="Gallery"
         title="Photo Gallery"
         subtitle="Moments from kathas, festivals and satsang with Shri Gaurdas Ji Maharaj."
-        image={IMAGES.heroGaurdasji}
+        image={IMAGES.galleryBanner}
       />
 
       <section className="py-10 sm:py-14 bg-cream-50">

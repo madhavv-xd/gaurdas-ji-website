@@ -54,7 +54,7 @@ export default function Contact() {
         breadcrumb="Contact to our friendly team"
         title="Contact Us"
         subtitle="We’d love to hear from you. Fill out the form or reach us directly."
-        image={IMAGES.gaurdasji1}
+        image={IMAGES.contactBanner}
       />
 
       <section className="py-10 sm:py-14 bg-cream-50">

@@ -31,8 +31,8 @@ import {
   ABOUT,
   CATEGORIES,
   KATHAS,
-  VIDEOS,
   BHAJANS,
+  EKADASHI_SHEET_URL,
   YT_LIVE_URL,
   mapsDir,
 } from '@/data/content';
@@ -44,11 +44,43 @@ const upcoming = KATHAS.filter((k) => k.status === 'upcoming');
 const categoryName = (id: number) => CATEGORIES.find((c) => c.id === id)?.name ?? '';
 const aboutIntro = (ABOUT.html.match(/<p>[\s\S]*?<\/p>/g) ?? []).slice(0, 2).join('');
 
-const STATS = [
-  { value: KATHAS.filter((k) => k.status === 'done').length, label: 'Kathas held' },
-  { value: VIDEOS.length, label: 'Katha videos' },
-  { value: BHAJANS.length, label: 'Bhajans' },
-];
+const BHAJAN_COUNT_KEY = 'bhajan-count-v1';
+let bhajanTotal: Promise<number> | undefined; // one request per page load, shared by every count on the page
+
+// Bhajans in the sheet's BhajanVideos tab (the total from ?view=bhajanList). The last total this browser saw shows
+// at once; the bundled BHAJANS list stands in on a first visit or when the sheet can't be reached.
+function useBhajanCount() {
+  const [n, setN] = useState(() => {
+    try {
+      return Number(localStorage.getItem(BHAJAN_COUNT_KEY)) || BHAJANS.length;
+    } catch {
+      return BHAJANS.length;
+    }
+  });
+  useEffect(() => {
+    let live = true;
+    (bhajanTotal ??= fetch(`${EKADASHI_SHEET_URL}?view=bhajanList`)
+      .then((r) => r.json())
+      .then((d) => {
+        // an older deployment answers with the kirtan list instead
+        if (typeof d.total !== 'number') throw new Error('no bhajan total');
+        try {
+          localStorage.setItem(BHAJAN_COUNT_KEY, String(d.total));
+        } catch {
+          /* storage blocked or full: the count still shows */
+        }
+        return d.total;
+      }))
+      .then((t) => live && setN(t))
+      .catch(() => {
+        bhajanTotal = undefined; // let the next page try again
+      });
+    return () => {
+      live = false;
+    };
+  }, []);
+  return n;
+}
 
 type Slide = {
   image: string;
@@ -61,7 +93,7 @@ type Slide = {
   secondary: { label: string; to: string };
 };
 
-const SLIDES: Slide[] = [
+const slides = (bhajans: number): Slide[] => [
   {
     image: IMAGES.heroGaurdasji,
     tint: 'rgba(11,30,43,.9),rgba(11,30,43,.55) 46%,rgba(11,30,43,.12)',
@@ -86,29 +118,11 @@ const SLIDES: Slide[] = [
     tint: 'rgba(48,12,34,.9),rgba(120,40,80,.4) 55%,rgba(48,12,34,.12)',
     eyebrow: 'Bhajan & Kirtan',
     title: 'Listen to Maharaj Ji’s Bhajans',
-    sub: `${BHAJANS.length} bhajans and kirtans, plus recordings of every katha day.`,
+    sub: `${bhajans} bhajans and kirtans, plus recordings of every katha day.`,
     primary: { label: 'Listen to Bhajans', to: '/bhajan' },
     secondary: { label: 'Watch Kathas', to: '/all-kathas' },
   },
 ];
-
-// Counts up once, on first load only; plain number with reduced motion
-function CountUp({ to, run }: { to: number; run: boolean }) {
-  const [n, setN] = useState(run ? 0 : to);
-  useEffect(() => {
-    if (!run || matchMedia('(prefers-reduced-motion: reduce)').matches) return setN(to);
-    const t0 = performance.now();
-    let raf = 0;
-    const tick = (t: number) => {
-      const p = Math.min(1, (t - t0) / 1400);
-      setN(Math.round(to * (1 - Math.pow(1 - p, 3))));
-      if (p < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [to, run]);
-  return <>{n}</>;
-}
 
 // One side of the hero frame: a gold line broken by the label (label only on xl, where the margin fits it)
 function FrameSide({ text, className }: { text: string; className: string }) {
@@ -126,13 +140,9 @@ function FrameSide({ text, className }: { text: string; className: string }) {
 function HeroSlider() {
   const [cur, setCur] = useState(0);
   const [paused, setPaused] = useState(false);
-  const firstSlide = useRef(true);
   const swipeX = useRef<number | null>(null);
+  const SLIDES = slides(useBhajanCount());
   const go = (i: number) => setCur((i + SLIDES.length) % SLIDES.length);
-
-  useEffect(() => {
-    if (cur !== 0) firstSlide.current = false;
-  }, [cur]);
 
   const s = SLIDES[cur];
   return (
@@ -199,16 +209,6 @@ function HeroSlider() {
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link to={s.secondary.to} className="btn-ghost flex-1 sm:flex-none">{s.secondary.label}</Link>
-          </div>
-          <div className="flex gap-2.5 mt-8 flex-wrap animate-fade-up" style={{ animationDelay: '.36s' }}>
-            {STATS.map((f) => (
-              <div key={f.label} className="glass rounded-[14px] px-[18px] py-3.5 min-w-[120px]">
-                <b className="block font-serif-display text-[1.55rem] leading-none text-white tabular-nums">
-                  <CountUp to={f.value} run={firstSlide.current} />
-                </b>
-                <span className="text-[0.64rem] tracking-[0.12em] uppercase text-[#ffd9a8]">{f.label}</span>
-              </div>
-            ))}
           </div>
         </div>
       </div>
@@ -372,6 +372,7 @@ function HomeKathas() {
 
 export default function Home() {
   usePageTitle();
+  const bhajans = useBhajanCount();
 
   return (
     <div>
@@ -394,7 +395,7 @@ export default function Home() {
           {[
             { icon: Radio, title: 'Live Katha', sub: 'Watch live on YouTube', href: YT_LIVE_URL },
             { icon: BookOpen, title: 'Kathas', sub: 'Watch & listen', to: '/all-kathas' },
-            { icon: Music, title: 'Bhajans & Kirtan', sub: `${BHAJANS.length} bhajans`, to: '/bhajan' },
+            { icon: Music, title: 'Bhajans & Kirtan', sub: `${bhajans} bhajans`, to: '/bhajan' },
             { icon: Heart, title: 'Donate', sub: 'UPI or bank transfer', to: '/donate-us' },
           ].map(({ icon: Icon, title, sub, to, href }) => {
             const cls =

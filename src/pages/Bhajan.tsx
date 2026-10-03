@@ -59,7 +59,7 @@ export default function Bhajan() {
         breadcrumb="Our Bhajans"
         title="Bhajans & Kirtan"
         subtitle="Bhajans and kirtans sung by Param Pujya Shri Gaurdas Ji Maharaj."
-        image={IMAGES.kathaPortrait}
+        image={IMAGES.bhajanBanner}
       />
       <section className="py-10 sm:py-14 bg-cream-50">
         <div className="max-w-[1200px] mx-auto px-[22px]">

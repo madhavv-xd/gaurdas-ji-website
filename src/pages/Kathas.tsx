@@ -20,7 +20,7 @@ export default function Kathas() {
         breadcrumb="Our Katha's"
         title="Join All Kathas"
         subtitle="Recordings of Shri Gaurdas Ji Maharaj’s kathas, from his YouTube channel."
-        image={IMAGES.heroKatha}
+        image={IMAGES.kathaBanner}
       />
 
       <section className="py-10 sm:py-14 bg-cream-50">

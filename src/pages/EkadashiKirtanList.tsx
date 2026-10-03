@@ -41,7 +41,7 @@ export default function EkadashiKirtanList() {
         breadcrumb="Events"
         title="Ekadashi Kirtan List"
         subtitle="Find an Ekadashi kirtan near you."
-        image={IMAGES.gaurdasji3}
+        image={IMAGES.ekadashiBanner}
         crumbs={[{ label: 'Events', to: '/events' }]}
       />
 

@@ -20,7 +20,7 @@ export default function Events() {
         breadcrumb="Watch and listen"
         title="Upcoming Kathas"
         subtitle="Where Shri Gaurdas Ji Maharaj’s next kathas will be held."
-        image={IMAGES.gaurdasji3}
+        image={IMAGES.eventsBanner}
       />
 
       <section className="py-10 sm:py-14 bg-cream-50">

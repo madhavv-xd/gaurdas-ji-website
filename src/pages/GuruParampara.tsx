@@ -20,7 +20,7 @@ export default function GuruParampara() {
         breadcrumb="Disciplic Succession"
         title="Guru Parampara"
         subtitle="The line of spiritual masters in which Shri Gaurdas Ji Maharaj serves."
-        image={IMAGES.heroKatha}
+        image={IMAGES.paramparaBanner}
       />
 
       <section className="py-10 sm:py-14 bg-cream-100">

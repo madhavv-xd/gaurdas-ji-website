@@ -10,7 +10,7 @@ export default function About() {
         breadcrumb="About Us"
         title="Shri Gaurdas Ji Maharaj"
         subtitle="A brief life introduction of Param Pujya Shri Gaurdas Ji Maharaj."
-        image={IMAGES.gaurdasji1}
+        image={IMAGES.aboutBanner}
       />
 
       <section className="py-10 sm:py-14">

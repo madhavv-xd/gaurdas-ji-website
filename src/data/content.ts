@@ -5,8 +5,16 @@ import nitaiDas from '@/assets/nitaidas-ji.jpg';
 import heroGaurdasji from '@/assets/hero-gaurdasji.jpg';
 import heroKatha from '@/assets/hero-katha.jpg';
 import gaurdasji1 from '@/assets/gaurDasji1.jpeg';
+import aboutBanner from '@/assets/about-banner.webp';
+import bhajanBanner from '@/assets/bhajan-banner.webp';
+import kathaBanner from '@/assets/katha-banner.webp';
+import paramparaBanner from '@/assets/parampara-banner.webp';
+import galleryBanner from '@/assets/gallery-banner.webp';
+import eventsBanner from '@/assets/events-banner.webp';
+import ekadashiBanner from '@/assets/ekadashi-banner.webp';
+import contactBanner from '@/assets/contact-banner.webp';
 import gaurdasji3 from '@/assets/gaurDasji3.jpeg';
-import kathaPortrait from '@/assets/aboutkathagaurdasji.jpeg';
+import kathaPortrait from '@/assets/katha-portrait.webp';
 import about1 from '@/assets/About1.jpeg';
 import about2 from '@/assets/About2.jpeg';
 import about3 from '@/assets/About3.jpeg';
@@ -55,6 +63,14 @@ export const IMAGES = {
   heroGaurdasji,
   heroKatha,
   gaurdasji1,
+  aboutBanner,
+  bhajanBanner,
+  kathaBanner,
+  paramparaBanner,
+  galleryBanner,
+  eventsBanner,
+  ekadashiBanner,
+  contactBanner,
   gaurdasji3,
   kathaPortrait,
   about: [about1, about2, about3],
@@ -110,3 +126,9 @@ export const NITAI_SOCIAL = [
   { label: 'Instagram', handle: '@shrinitaidasji', action: 'Follow', href: 'https://www.instagram.com/shrinitaidasji' },
   { label: 'Facebook', handle: 'Shri Nitai Das Ji', action: 'Follow', href: 'https://www.facebook.com/profile.php?id=61559301771645' },
 ] as const;
+
+export const NITAI_ABOUT = [
+  'आप परम पूज्य गुरुदेव श्री गौर दास जी महाराज एवं गुरु माँ श्रीमती विष्णु प्रिया दासी जी के सुपुत्र हैं। गर्भकाल में ही गुरु माँ को अनेक दिव्य अनुभूतियाँ हुईं और उन्हें श्री बाँके बिहारी जी के मंदिर के गर्भगृह के मार्जन का सौभाग्य प्राप्त हुआ।',
+  "मात्र 3-4 वर्ष की आयु से ही आपका रुझान सत्संग और कथा श्रवण की ओर रहा। 5 वर्ष की आयु में आपने बिना सिखाए स्वयं ही 'भक्त चरित्र' कहना प्रारंभ कर दिया। कथा, श्लोक और पद आपको एक बार सुनकर ही कंठस्थ हो जाते थे, और आप हारमोनियम बजाकर सुंदर पदों का गायन भी करने लगे।",
+  'वेद, संस्कृत और श्रीमद्भागवत की विधिवत शिक्षा के साथ आप उस महान श्रीमद्भागवत परंपरा से जुड़े हैं, जो गदाधर भट्ट गोस्वामी जी से होते हुए परम पूज्य श्री अच्युत लाल भट्ट जी महाराज तक आई है। उन्हीं की कृपा से आपका तिलक हुआ और आप भागवत आसन पर विराजमान हुए। आपकी प्रथम श्रीमद्भागवत कथा 9 से 15 जनवरी 2026 तक हिंदी भवन, लोहिया नगर, गाज़ियाबाद में आयोजित हुई।',
+];
