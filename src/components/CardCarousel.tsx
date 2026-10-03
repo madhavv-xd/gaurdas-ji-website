@@ -51,7 +51,7 @@ export default function CardCarousel({ label, children }: { label: string; child
       <div
         ref={track}
         onScroll={onScroll}
-        className="relative flex gap-5 overflow-x-auto snap-x snap-mandatory py-6 -mt-6 px-[calc(50%-130px)] sm:px-[calc(50%-150px)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]"
+        className="relative flex gap-5 overflow-x-auto snap-x snap-mandatory py-8 -mt-8 px-[calc(50%-130px)] sm:px-[calc(50%-150px)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]"
       >
         {[...slides, ...slides, ...slides].map((s, i) => (
           <div
@@ -106,12 +106,12 @@ function Controls({ n, cur, go, loop }: { n: number; cur: number; go: (i: number
 
 // 3D deck of flashcards: the front card is live, the rest sit behind it, tilted and pushed back.
 // Arrows, dots, swipe, arrow keys, or clicking/focusing a back card bring a card to the front.
-export function CardStack({ label, children }: { label: string; children: ReactNode }) {
+// The caller holds which card is in front, so something beside the deck can follow or change it.
+export function CardStack({ label, cur, onChange, children }: { label: string; cur: number; onChange: (i: number) => void; children: ReactNode }) {
   const slides = Children.toArray(children);
   const n = slides.length;
-  const [cur, setCur] = useState(0);
   const swipe = useRef<{ x: number; moved: boolean } | null>(null);
-  const go = (i: number) => setCur((i + n) % n);
+  const go = (i: number) => onChange((i + n) % n);
 
   return (
     <div
@@ -125,7 +125,7 @@ export function CardStack({ label, children }: { label: string; children: ReactN
       }}
     >
       <div
-        className="relative mx-auto w-[260px] sm:w-[300px] aspect-[3/4] my-6 [perspective:1400px] touch-pan-y"
+        className="relative mx-auto w-[260px] sm:w-[300px] lg:w-[330px] aspect-[4/5] mt-20 mb-6 [perspective:1400px] touch-pan-y"
         onPointerDown={(e) => (swipe.current = { x: e.clientX, moved: false })}
         onPointerMove={(e) => {
           if (swipe.current && Math.abs(e.clientX - swipe.current.x) > 10) swipe.current.moved = true;
@@ -171,42 +171,84 @@ export function CardStack({ label, children }: { label: string; children: ReactN
   );
 }
 
-// Tall image card: full-bleed picture, badge on top, text over a dark fade at the bottom.
-export function PosterCard({
-  to,
-  image,
-  badge,
-  transitionName,
-  center,
-  children,
-}: {
+// Temple-arch (jharokha) outlines: two stepped tiers and a pointed dome. CREST is the small tab on PosterCard,
+// CROWN the top of JharokhaCard. Both sit above the picture, so a poster's title is never cut.
+const CREST = 'M0,54C0,39.8 11.6,33.1 25.6,31.7C27.3,20.9 36.4,16.2 44.6,15.5C46.3,6.8 56.2,2.7 62,0C67.8,2.7 77.7,6.8 79.4,15.5C87.6,16.2 96.7,20.9 98.4,31.7C112.4,33.1 124,39.8 124,54';
+const CROWN =
+  'M0,96C0,70.8 28,58.8 62,56.4C66,37.2 88,28.8 108,27.6C112,12 136,4.8 150,0C164,4.8 188,12 192,27.6C212,28.8 234,37.2 238,56.4C272,58.8 300,70.8 300,96';
+
+type CardProps = {
   to: string;
   image: string;
   badge: string;
   transitionName?: string;
   center?: ReactNode;
   children: ReactNode;
-}) {
+};
+
+const Picture = ({ image, transitionName }: Pick<CardProps, 'image' | 'transitionName'>) => (
+  <img
+    src={image}
+    alt=""
+    loading="lazy"
+    decoding="async"
+    style={transitionName ? { viewTransitionName: transitionName } : undefined}
+    className="[view-transition-class:hero-morph] absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+  />
+);
+
+// Dark poster card: the whole 4:5 picture with text over a fade at the bottom; the badge rides on a saffron arch tab above it.
+export function PosterCard({ to, image, badge, transitionName, center, children }: CardProps) {
   return (
     <Link
       to={to}
       viewTransition
-      className="group relative flex flex-col justify-end aspect-[3/4] rounded-[26px] overflow-hidden bg-ink-800 shadow-lift focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-saffron-400"
+      // drop-shadow (not box-shadow) so the shadow takes in the tab
+      className="group relative block rounded-[22px] drop-shadow-[0_16px_24px_rgba(16,43,61,.3)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-saffron-400"
     >
-      <img
-        src={image}
-        alt=""
-        loading="lazy"
-        decoding="async"
-        style={transitionName ? { viewTransitionName: transitionName } : undefined}
-        className="[view-transition-class:hero-morph] absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-      />
-      <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(9,24,36,.95),rgba(9,24,36,.35)_45%,rgba(9,24,36,.55))]" />
-      <span className="absolute top-4 left-4 z-10 text-white text-[0.72rem] font-bold uppercase tracking-wider px-3.5 py-1.5 rounded-full bg-saffron-500 shadow-soft">
-        {badge}
+      <span className="absolute left-1/2 bottom-[calc(100%-1px)] -translate-x-1/2 w-[124px] h-[54px] z-10">
+        <svg viewBox="0 0 124 54" preserveAspectRatio="none" aria-hidden className="absolute inset-0 w-full h-full overflow-visible">
+          <path d={`${CREST}Z`} className="fill-saffron-500" />
+          <path d={CREST} fill="none" className="stroke-saffron-300" vectorEffect="non-scaling-stroke" />
+        </svg>
+        <i className="absolute left-1/2 top-[22px] -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white/90" aria-hidden />
+        <span className="absolute inset-x-0 bottom-2 text-center text-white text-[0.64rem] font-bold uppercase tracking-[0.08em]">{badge}</span>
       </span>
-      {center && <div className="absolute inset-0 z-10 flex items-center justify-center">{center}</div>}
-      <div className="relative z-10 p-5 text-white">{children}</div>
+      <div className="relative flex flex-col justify-end aspect-[4/5] overflow-hidden rounded-[22px] bg-ink-800">
+        <Picture image={image} transitionName={transitionName} />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(9,24,36,.95),rgba(9,24,36,.35)_45%,transparent_75%)]" />
+        {center && <div className="absolute inset-0 z-10 flex items-center justify-center">{center}</div>}
+        <div className="relative z-10 p-5 text-white">{children}</div>
+      </div>
+    </Link>
+  );
+}
+
+// Ivory card shaped like a jharokha: gold-trimmed arch top, the whole 4:5 picture, then badge and text below it.
+export function JharokhaCard({ to, image, badge, transitionName, center, children }: CardProps) {
+  return (
+    <Link
+      to={to}
+      viewTransition
+      className="group block rounded-[20px] drop-shadow-[0_16px_24px_rgba(16,43,61,.22)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-saffron-400"
+    >
+      <svg viewBox="0 0 300 96" aria-hidden className="block w-full h-auto -mb-px overflow-visible">
+        <path d={`${CROWN}Z`} className="fill-white" />
+        <path d={CROWN} fill="none" className="stroke-gold" vectorEffect="non-scaling-stroke" />
+        <g className="fill-gold">
+          <circle cx="150" cy="44" r="5" />
+          <circle cx="138" cy="52" r="3" />
+          <circle cx="162" cy="52" r="3" />
+        </g>
+      </svg>
+      <div className="bg-white border border-t-0 border-gold rounded-b-[20px] px-3.5 pb-4 text-center">
+        <div className="relative aspect-[4/5] overflow-hidden rounded-[10px] bg-cream-200">
+          <Picture image={image} transitionName={transitionName} />
+          {center && <div className="absolute inset-0 flex items-center justify-center">{center}</div>}
+        </div>
+        <span className="block mt-3.5 text-[0.64rem] font-bold uppercase tracking-[0.12em] text-saffron-600">{badge}</span>
+        {children}
+      </div>
     </Link>
   );
 }

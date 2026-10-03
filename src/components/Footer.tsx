@@ -5,17 +5,6 @@ import { SITE, NAV_LINKS, IMAGES, mapsDir } from '@/data/content';
 export default function Footer() {
   return (
     <>
-      {/* Stay connected band: the WhatsApp channel is how the ashram actually sends updates */}
-      <section className="bg-[linear-gradient(120deg,#e8892b,#f4a733)] text-white text-center py-12 px-[22px]">
-        <h2 className="text-[clamp(1.8rem,3.2vw,2.5rem)] leading-tight">Stay Connected to the Ashram</h2>
-        <p className="opacity-95 max-w-[520px] mx-auto mt-2.5 mb-6">
-          Katha schedules and live links from Shri Gaurdas Ji Maharaj, straight to your WhatsApp.
-        </p>
-        <a href={SITE.whatsappChannel} target="_blank" rel="noopener noreferrer" className="btn-ink">
-          <MessageCircle className="w-4 h-4" /> Join WhatsApp Channel
-        </a>
-      </section>
-
       <footer className="bg-ink-900 text-[#b9c8d4] pt-10">
         <div className="max-w-[1200px] mx-auto px-[22px]">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1fr] gap-9 pb-8 border-b border-white/10">

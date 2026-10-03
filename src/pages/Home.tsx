@@ -18,7 +18,7 @@ import {
   Calendar,
 } from 'lucide-react';
 import SectionHeading from '@/components/SectionHeading';
-import CardCarousel, { CardStack, PosterCard } from '@/components/CardCarousel';
+import CardCarousel, { CardStack, JharokhaCard, PosterCard } from '@/components/CardCarousel';
 import GuruVarg from '@/components/GuruVarg';
 import VideoGallery from '@/components/VideoGallery';
 import { EkadashiDatesButton } from '@/components/EkadashiKirtan';
@@ -110,6 +110,19 @@ function CountUp({ to, run }: { to: number; run: boolean }) {
   return <>{n}</>;
 }
 
+// One side of the hero frame: a gold line broken by the label (label only on xl, where the margin fits it)
+function FrameSide({ text, className }: { text: string; className: string }) {
+  return (
+    <div className={`absolute inset-y-0 flex flex-col items-center ${className}`}>
+      <span className="flex-1 w-px bg-gold/45" />
+      <b className="hidden xl:block py-5 [writing-mode:vertical-rl] text-[0.66rem] font-semibold tracking-[0.35em] uppercase text-[#ffd9a8]/75">
+        {text}
+      </b>
+      <span className="flex-1 w-px bg-gold/45" />
+    </div>
+  );
+}
+
 function HeroSlider() {
   const [cur, setCur] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -156,7 +169,13 @@ function HeroSlider() {
       ))}
       <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(9,24,36,.6),transparent_34%)] pointer-events-none" />
 
-      <div className="relative z-10 max-w-[1200px] w-full mx-auto px-[22px] py-12 lg:py-16 flex items-center">
+      {/* gold frame, the ashram's name running down its sides (wide screens), like a framed painting */}
+      <div aria-hidden className="pointer-events-none absolute inset-3 sm:inset-5 xl:inset-6 z-10 border-y border-gold/45">
+        <FrameSide text={SITE.ashram} className="left-0 -translate-x-1/2 [&>b]:rotate-180" />
+        <FrameSide text="Vrindavan" className="right-0 translate-x-1/2" />
+      </div>
+
+      <div className="relative z-10 max-w-[1200px] w-full mx-auto px-8 sm:px-12 xl:px-[22px] pt-12 pb-24 lg:pt-16 lg:pb-28 flex items-center">
         <div key={cur} className="text-white max-w-[660px]" aria-live={paused ? 'polite' : 'off'}>
           {s.badge && (
             <span className="inline-flex items-center gap-2 bg-saffron-500/20 border border-saffron-400/55 text-[#ffd9a8] px-4 py-1.5 rounded-full text-[0.8rem] font-semibold mb-4 animate-fade-up">
@@ -194,7 +213,7 @@ function HeroSlider() {
         </div>
       </div>
 
-      <div className="absolute bottom-[18px] left-1/2 -translate-x-1/2 z-20 flex items-center gap-3.5">
+      <div className="absolute bottom-7 sm:bottom-9 xl:bottom-10 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3.5">
         <button onClick={() => go(cur - 1)} aria-label="Previous slide" className="w-10 h-10 rounded-full border border-white/50 bg-[rgba(9,24,36,.42)] backdrop-blur text-white flex items-center justify-center hover:bg-saffron-500 hover:border-transparent active:scale-95 transition-colors">
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -221,6 +240,86 @@ function HeroSlider() {
         <button onClick={() => go(cur + 1)} aria-label="Next slide" className="w-10 h-10 rounded-full border border-white/50 bg-[rgba(9,24,36,.42)] backdrop-blur text-white flex items-center justify-center hover:bg-saffron-500 hover:border-transparent active:scale-95 transition-colors">
           <ChevronRight className="w-5 h-5" />
         </button>
+      </div>
+    </section>
+  );
+}
+
+// Upcoming kathas: the card deck on one side, the schedule on the other. Hovering or focusing a row
+// brings its card to the front; the deck's own arrows highlight the matching row.
+function UpcomingKathas() {
+  const [cur, setCur] = useState(0);
+  return (
+    <section className="py-10 sm:py-14">
+      <div className="max-w-[1200px] mx-auto px-[22px] grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] gap-x-14 items-center">
+        <div className="lg:col-start-2">
+          <SectionHeading eyebrow="Events" title="All Upcoming Kathas" align="left" />
+        </div>
+        <div className="lg:col-start-1 lg:row-start-1 lg:row-span-2">
+          <CardStack label="Upcoming kathas" cur={cur} onChange={setCur}>
+            {upcoming.map((k) => (
+              <PosterCard key={k.id} to={`/event-detail/${k.id}`} image={k.images[0] ?? CATEGORIES.find((c) => c.id === k.categoryId)?.image ?? IMAGES.heroKatha} badge="Upcoming">
+                {categoryName(k.categoryId) && <p className="font-sanskrit text-saffron-300 text-sm mb-1">{categoryName(k.categoryId)}</p>}
+                <b className="block font-serif-display font-normal text-[1.6rem] leading-tight">{k.name}</b>
+                <dl className="mt-2.5 space-y-1 text-[0.85rem] text-white/85">
+                  {k.dates && (
+                    <div className="flex gap-2"><dt className="sr-only">Dates</dt><Calendar className="w-4 h-4 mt-0.5 text-saffron-400 flex-none" aria-hidden /><dd>{k.dates}</dd></div>
+                  )}
+                  {k.location && (
+                    <div className="flex gap-2"><dt className="sr-only">Venue</dt><MapPin className="w-4 h-4 mt-0.5 text-saffron-400 flex-none" aria-hidden /><dd className="line-clamp-2">{k.location}</dd></div>
+                  )}
+                </dl>
+              </PosterCard>
+            ))}
+          </CardStack>
+        </div>
+        <div className="lg:col-start-2">
+          <ol className="space-y-2">
+            {upcoming.map((k, i) => {
+              const [day, month] = k.dates.split(' '); // "07 August 2026 - 14 August 2026"
+              const on = i === cur;
+              return (
+                <li key={k.id}>
+                  <Link
+                    to={`/event-detail/${k.id}`}
+                    onMouseEnter={() => setCur(i)}
+                    onFocus={() => setCur(i)}
+                    className={`flex items-center gap-4 rounded-[16px] p-3 pr-4 transition-colors ${on ? 'bg-white shadow-soft ring-1 ring-gold/30' : 'hover:bg-white/60'}`}
+                  >
+                    <span
+                      className={`flex-none w-14 h-14 rounded-[12px] flex flex-col items-center justify-center leading-none transition-colors ${
+                        on ? 'bg-saffron-500 text-white' : 'bg-cream-200 text-ink-800'
+                      }`}
+                    >
+                      {day && month ? (
+                        <>
+                          <b className="font-serif-display font-normal text-[1.35rem]">{day}</b>
+                          <span className="mt-1 text-[0.62rem] font-semibold uppercase tracking-wider">{month.slice(0, 3)}</span>
+                        </>
+                      ) : (
+                        <Calendar className="w-5 h-5" aria-hidden />
+                      )}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <b className="block font-semibold text-ink-800 truncate">{k.name}</b>
+                      {k.dates && <span className="block text-[0.82rem] text-saffron-600">{k.dates}</span>}
+                      {k.location && <span className="block text-[0.82rem] text-ink-400 truncate">{k.location}</span>}
+                    </span>
+                    <ArrowRight
+                      className={`w-4 h-4 flex-none text-saffron-500 transition ${on ? 'opacity-100' : 'opacity-0 -translate-x-1'}`}
+                      aria-hidden
+                    />
+                  </Link>
+                </li>
+              );
+            })}
+          </ol>
+          <div className="mt-8 text-center lg:text-left">
+            <Link to="/events" className="btn-outline">
+              All Events <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -320,7 +419,7 @@ export default function Home() {
           />
           <CardCarousel label="Katha series">
             {CATEGORIES.map((c) => (
-              <PosterCard
+              <JharokhaCard
                 key={c.id}
                 to={`/katha-details/${c.id}`}
                 image={c.image}
@@ -332,11 +431,11 @@ export default function Home() {
                   </span>
                 }
               >
-                <b className="block font-sanskrit font-normal text-[1.5rem] leading-tight">{c.name}</b>
-                <span className="mt-1.5 inline-flex items-center gap-1.5 text-sm text-white/80 group-hover:text-white">
+                <b className="block mt-1.5 font-sanskrit font-normal text-[1.35rem] leading-tight text-ink-800">{c.name}</b>
+                <span className="mt-1.5 inline-flex items-center gap-1.5 text-sm font-medium text-saffron-600">
                   Watch the recordings <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden />
                 </span>
-              </PosterCard>
+              </JharokhaCard>
             ))}
           </CardCarousel>
           <div className="text-center mt-10">
@@ -347,35 +446,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* UPCOMING EVENTS */}
-      {upcoming.length > 0 && (
-        <section className="py-10 sm:py-14">
-          <div className="max-w-[1200px] mx-auto px-[22px]">
-            <SectionHeading eyebrow="Events" title="All Upcoming Kathas" />
-            <CardStack label="Upcoming kathas">
-              {upcoming.map((k) => (
-                <PosterCard key={k.id} to={`/event-detail/${k.id}`} image={k.images[0] ?? CATEGORIES.find((c) => c.id === k.categoryId)?.image ?? IMAGES.heroKatha} badge="Upcoming">
-                  {categoryName(k.categoryId) && <p className="font-sanskrit text-saffron-300 text-sm mb-1">{categoryName(k.categoryId)}</p>}
-                  <b className="block font-serif-display font-normal text-[1.6rem] leading-tight">{k.name}</b>
-                  <dl className="mt-2.5 space-y-1 text-[0.85rem] text-white/85">
-                    {k.dates && (
-                      <div className="flex gap-2"><dt className="sr-only">Dates</dt><Calendar className="w-4 h-4 mt-0.5 text-saffron-400 flex-none" aria-hidden /><dd>{k.dates}</dd></div>
-                    )}
-                    {k.location && (
-                      <div className="flex gap-2"><dt className="sr-only">Venue</dt><MapPin className="w-4 h-4 mt-0.5 text-saffron-400 flex-none" aria-hidden /><dd className="line-clamp-2">{k.location}</dd></div>
-                    )}
-                  </dl>
-                </PosterCard>
-              ))}
-            </CardStack>
-            <div className="text-center mt-10">
-              <Link to="/events" className="btn-outline">
-                All Events <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
+      {upcoming.length > 0 && <UpcomingKathas />}
 
       {/* PREVIOUS EVENTS */}
       <section className="py-10 sm:py-14 bg-cream-100">
@@ -450,6 +521,17 @@ export default function Home() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Stay connected band: the WhatsApp channel is how the ashram actually sends updates */}
+      <section className="bg-[linear-gradient(120deg,#e8892b,#f4a733)] text-white text-center py-12 px-[22px]">
+        <h2 className="text-[clamp(1.8rem,3.2vw,2.5rem)] leading-tight">Stay Connected to the Ashram</h2>
+        <p className="opacity-95 max-w-[520px] mx-auto mt-2.5 mb-6">
+          Katha schedules and live links from Shri Gaurdas Ji Maharaj, straight to your WhatsApp.
+        </p>
+        <a href={SITE.whatsappChannel} target="_blank" rel="noopener noreferrer" className="btn-ink">
+          <MessageCircle className="w-4 h-4" /> Join WhatsApp Channel
+        </a>
       </section>
     </div>
   );
