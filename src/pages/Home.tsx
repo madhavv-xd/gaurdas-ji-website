@@ -22,6 +22,7 @@ import CardCarousel, { CardStack, PosterCard } from '@/components/CardCarousel';
 import GuruVarg from '@/components/GuruVarg';
 import VideoGallery from '@/components/VideoGallery';
 import { EkadashiDatesButton } from '@/components/EkadashiKirtan';
+import HomeBanners from '@/components/HomeBanners';
 import { usePageTitle } from '@/lib/usePageTitle';
 import {
   IMAGES,
@@ -231,6 +232,7 @@ export default function Home() {
   return (
     <div>
       <HeroSlider />
+      <HomeBanners />
       <EkadashiDatesButton />
       <Link
         to="/shri-nitai-das-ji-maharaj"
