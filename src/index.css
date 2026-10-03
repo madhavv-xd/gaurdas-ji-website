@@ -89,6 +89,15 @@
   .card-media {
     @apply relative overflow-hidden rounded-[14px] bg-cream-200;
   }
+  /* Darshan card (Books): ivory mat with a scalloped edge, like an old devotional picture card.
+     Scallops = a grid of circles of radius --r, unioned with a rectangle inset by --r. */
+  .darshan-mat {
+    --r: 7px;
+    -webkit-mask: radial-gradient(circle closest-side, #000 97%, #0000) 0 0 / calc(2 * var(--r)) calc(2 * var(--r)) round,
+      linear-gradient(#000 0 0) var(--r) var(--r) / calc(100% - 2 * var(--r)) calc(100% - 2 * var(--r)) no-repeat;
+    mask: radial-gradient(circle closest-side, #000 97%, #0000) 0 0 / calc(2 * var(--r)) calc(2 * var(--r)) round,
+      linear-gradient(#000 0 0) var(--r) var(--r) / calc(100% - 2 * var(--r)) calc(100% - 2 * var(--r)) no-repeat;
+  }
   .btn {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full font-semibold text-[0.95rem] whitespace-nowrap border-[1.5px] border-transparent transition-[transform,box-shadow,background-color] duration-200 active:scale-[.98];
   }

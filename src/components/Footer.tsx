@@ -55,9 +55,6 @@ export default function Footer() {
                   {link.label}
                 </Link>
               ))}
-              <Link to="/previous-event" className="block py-1 text-sm opacity-80 hover:opacity-100 hover:text-saffron-400 transition-colors">
-                Previous Kathas
-              </Link>
               <Link to="/donate-us" className="inline-flex items-center gap-1.5 py-1 text-sm text-saffron-400 hover:text-saffron-300 transition-colors">
                 <Heart className="w-3.5 h-3.5" fill="currentColor" /> Donate
               </Link>

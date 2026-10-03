@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { createBrowserRouter, RouterProvider, Routes, Route, useLocation } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import BackToTop from '@/components/BackToTop';
@@ -11,9 +11,9 @@ import About from '@/pages/About';
 import GuruParampara from '@/pages/GuruParampara';
 import Kathas from '@/pages/Kathas';
 import KathaDetail from '@/pages/KathaDetail';
+import KathaPlaylist from '@/pages/KathaPlaylist';
 import Events from '@/pages/Events';
 import EventDetail from '@/pages/EventDetail';
-import PreviousEvents from '@/pages/PreviousEvents';
 import Bhajan from '@/pages/Bhajan';
 import Books from '@/pages/Books';
 import Gallery from '@/pages/Gallery';
@@ -87,9 +87,11 @@ function Shell() {
               <Route path="/about-guru-ji" element={<GuruParampara />} />
               <Route path="/all-kathas" element={<Kathas />} />
               <Route path="/katha-details/:id" element={<KathaDetail />} />
+              <Route path="/katha-playlist/:id" element={<KathaPlaylist />} />
               <Route path="/events" element={<Events />} />
               <Route path="/event-detail/:id" element={<EventDetail />} />
-              <Route path="/previous-event" element={<PreviousEvents />} />
+              {/* the old recordings page: its recordings now live on the Kathas page; keeps old links working */}
+              <Route path="/previous-event" element={<Navigate to="/all-kathas" replace />} />
               <Route path="/bhajan" element={<Bhajan />} />
               <Route path="/books" element={<Books />} />
               <Route path="/photos" element={<Gallery />} />

@@ -51,7 +51,7 @@ export default function CardCarousel({ label, children }: { label: string; child
       <div
         ref={track}
         onScroll={onScroll}
-        className="relative flex gap-5 overflow-x-auto snap-x snap-mandatory py-8 -mt-8 px-[calc(50%-130px)] sm:px-[calc(50%-150px)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]"
+        className="relative flex gap-5 overflow-x-auto snap-x snap-mandatory py-8 -mt-8 px-[calc(50%-150px)] sm:px-[calc(50%-210px)] lg:px-[calc(50%-230px)] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent)]"
       >
         {[...slides, ...slides, ...slides].map((s, i) => (
           <div
@@ -61,7 +61,7 @@ export default function CardCarousel({ label, children }: { label: string; child
             // copies stay out of the tab order and the accessibility tree
             {...(i < n || i >= 2 * n ? { inert: '', 'aria-hidden': true } : {})}
             // view-transition names must be unique, so only the middle copy keeps them
-            className={`snap-center shrink-0 w-[260px] sm:w-[300px] ${i < n || i >= 2 * n ? '[&_img]:![view-transition-name:none]' : ''}`}
+            className={`snap-center shrink-0 w-[300px] sm:w-[420px] lg:w-[460px] ${i < n || i >= 2 * n ? '[&_img]:![view-transition-name:none]' : ''}`}
           >
             <div
               className={`h-full transition-[transform,opacity] duration-500 ease-out motion-reduce:transition-none ${
@@ -224,7 +224,7 @@ export function PosterCard({ to, image, badge, transitionName, center, children 
   );
 }
 
-// Ivory card shaped like a jharokha: gold-trimmed arch top, the whole 4:5 picture, then badge and text below it.
+// Ivory card shaped like a jharokha: gold-trimmed arch top, the whole 16:9 picture (a YouTube thumbnail), then badge and text below it.
 export function JharokhaCard({ to, image, badge, transitionName, center, children }: CardProps) {
   return (
     <Link
@@ -241,12 +241,12 @@ export function JharokhaCard({ to, image, badge, transitionName, center, childre
           <circle cx="162" cy="52" r="3" />
         </g>
       </svg>
-      <div className="bg-white border border-t-0 border-gold rounded-b-[20px] px-3.5 pb-4 text-center">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-[10px] bg-cream-200">
+      <div className="bg-white border border-t-0 border-gold rounded-b-[20px] px-3.5 pb-4 sm:px-5 sm:pb-6 text-center">
+        <div className="relative aspect-video overflow-hidden rounded-[10px] bg-cream-200">
           <Picture image={image} transitionName={transitionName} />
           {center && <div className="absolute inset-0 flex items-center justify-center">{center}</div>}
         </div>
-        <span className="block mt-3.5 text-[0.64rem] font-bold uppercase tracking-[0.12em] text-saffron-600">{badge}</span>
+        <span className="block mt-3.5 sm:mt-5 text-[0.64rem] sm:text-[0.72rem] font-bold uppercase tracking-[0.12em] text-saffron-600">{badge}</span>
         {children}
       </div>
     </Link>

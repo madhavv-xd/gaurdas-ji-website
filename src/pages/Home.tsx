@@ -20,10 +20,10 @@ import {
 import SectionHeading from '@/components/SectionHeading';
 import CardCarousel, { CardStack, JharokhaCard, PosterCard } from '@/components/CardCarousel';
 import GuruVarg from '@/components/GuruVarg';
-import VideoGallery from '@/components/VideoGallery';
 import { EkadashiDatesButton } from '@/components/EkadashiKirtan';
 import HomeBanners from '@/components/HomeBanners';
 import { usePageTitle } from '@/lib/usePageTitle';
+import { usePlaylists } from '@/lib/usePlaylists';
 import {
   IMAGES,
   SITE,
@@ -88,7 +88,7 @@ const SLIDES: Slide[] = [
     title: 'Listen to Maharaj Ji’s Bhajans',
     sub: `${BHAJANS.length} bhajans and kirtans, plus recordings of every katha day.`,
     primary: { label: 'Listen to Bhajans', to: '/bhajan' },
-    secondary: { label: 'Previous Kathas', to: '/previous-event' },
+    secondary: { label: 'Watch Kathas', to: '/all-kathas' },
   },
 ];
 
@@ -250,8 +250,9 @@ function HeroSlider() {
 function UpcomingKathas() {
   const [cur, setCur] = useState(0);
   return (
-    <section className="py-10 sm:py-14">
-      <div className="max-w-[1200px] mx-auto px-[22px] grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] gap-x-14 items-center">
+    // overflow-x-clip: on phones the deck's back cards reach past the screen edge and would widen the page
+    <section className="py-10 sm:py-14 overflow-x-clip">
+      <div className="max-w-[1200px] mx-auto px-[22px] grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] gap-x-14 items-center">
         <div className="lg:col-start-2">
           <SectionHeading eyebrow="Events" title="All Upcoming Kathas" align="left" />
         </div>
@@ -319,6 +320,50 @@ function UpcomingKathas() {
               All Events <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// The first 6 katha playlists ticked in the sheet (same list as the Kathas page), as a carousel.
+// Hidden when nothing is ticked or the sheet can't be reached.
+function HomeKathas() {
+  const { lists, failed } = usePlaylists();
+  if (failed || lists?.length === 0) return null;
+  return (
+    <section className="py-10 sm:py-14 bg-cream-100">
+      <div className="max-w-[1200px] mx-auto px-[22px]">
+        <SectionHeading eyebrow="Watch and listen" title="Shri Gaurdas Ji Maharaj Kathas" description="Recordings of Maharaj Ji’s kathas, day by day." />
+        {lists ? (
+          <CardCarousel label="Kathas">
+            {lists.slice(0, 6).map((p) => (
+              <JharokhaCard
+                key={p.id}
+                to={`/katha-playlist/${p.id}`}
+                image={p.thumbnail}
+                badge={`${p.videos.length} ${p.videos.length === 1 ? 'video' : 'videos'}`}
+                transitionName={`pl-${p.id}`}
+                center={
+                  <span className="w-14 h-14 rounded-full bg-white/25 backdrop-blur-sm ring-1 ring-white/50 flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-saffron-500 transition duration-300">
+                    <Play className="w-6 h-6 ml-0.5" fill="currentColor" aria-hidden />
+                  </span>
+                }
+              >
+                <b className="block mt-1.5 font-sanskrit font-normal text-[1.35rem] sm:text-[1.65rem] leading-tight text-ink-800 line-clamp-2">{p.title}</b>
+                <span className="mt-1.5 sm:mt-2.5 inline-flex items-center gap-1.5 text-sm sm:text-base font-medium text-saffron-600">
+                  Watch the recordings <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden />
+                </span>
+              </JharokhaCard>
+            ))}
+          </CardCarousel>
+        ) : (
+          <p className="text-center text-ink-400 py-10" aria-live="polite">Loading kathas…</p>
+        )}
+        <div className="text-center mt-10">
+          <Link to="/all-kathas" className="btn-outline">
+            View All Kathas <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </div>
     </section>
@@ -409,57 +454,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* KATHAS — every katha series, as a carousel */}
-      <section className="py-10 sm:py-14 bg-cream-100">
-        <div className="max-w-[1200px] mx-auto px-[22px]">
-          <SectionHeading
-            eyebrow="Watch and listen"
-            title="Shri Gaurdas Ji Maharaj Kathas"
-            description="Every katha series with its dates, venues and recordings of each day."
-          />
-          <CardCarousel label="Katha series">
-            {CATEGORIES.map((c) => (
-              <JharokhaCard
-                key={c.id}
-                to={`/katha-details/${c.id}`}
-                image={c.image}
-                badge={`${KATHAS.filter((k) => k.categoryId === c.id).length} kathas`}
-                transitionName={`katha-${c.id}`}
-                center={
-                  <span className="w-14 h-14 rounded-full bg-white/25 backdrop-blur-sm ring-1 ring-white/50 flex items-center justify-center text-white group-hover:scale-110 group-hover:bg-saffron-500 transition duration-300">
-                    <Play className="w-6 h-6 ml-0.5" fill="currentColor" aria-hidden />
-                  </span>
-                }
-              >
-                <b className="block mt-1.5 font-sanskrit font-normal text-[1.35rem] leading-tight text-ink-800">{c.name}</b>
-                <span className="mt-1.5 inline-flex items-center gap-1.5 text-sm font-medium text-saffron-600">
-                  Watch the recordings <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden />
-                </span>
-              </JharokhaCard>
-            ))}
-          </CardCarousel>
-          <div className="text-center mt-10">
-            <Link to="/all-kathas" className="btn-outline">
-              View All Kathas <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
+      <HomeKathas />
 
       {upcoming.length > 0 && <UpcomingKathas />}
-
-      {/* PREVIOUS EVENTS */}
-      <section className="py-10 sm:py-14 bg-cream-100">
-        <div className="max-w-[1200px] mx-auto px-[22px]">
-          <SectionHeading eyebrow="Events" title="Previous Kathas" description="Recordings from recent kathas — tap any video to watch." />
-          <VideoGallery items={VIDEOS.slice(0, 6).map((v) => ({ id: v.id, title: v.name, yt: v.yt }))} />
-          <div className="text-center mt-10">
-            <Link to="/previous-event" className="btn-saffron">
-              Show All <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* DONATE */}
       <section className="py-10 sm:py-14 bg-[linear-gradient(120deg,#e8892b,#f4a733)] text-white">

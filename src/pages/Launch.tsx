@@ -1,13 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-// Website launch ceremony page (/launch): press "लॉन्च करें" → 5-second countdown → the home page, where
+// Website launch ceremony page (/launch): press "प्रवेश करें" → 5-second countdown → the home page, where
 // components/LaunchFireworks plays the fireworks. Shown full-screen on the projector at the katha.
 // Colours are the site's own: ink/brand blues with saffron-gold (tailwind.config.js).
 
 const GOLD = '#f4a733'; // saffron-400
 const PALE_GOLD = '#fad39a'; // saffron-200
 const COUNT_FROM = 5;
+
+// the site's main sections, as buttons under the intro
+const SECTIONS = [
+  { label: 'सम्पूर्ण कथाएँ', to: '/all-kathas' },
+  { label: 'आगामी कथा', to: '/events' },
+  { label: 'एकादशी एवं कीर्तन', to: '/ekadashi-kirtan-list' },
+  { label: 'श्री निताई दास जी महाराज', to: '/shri-nitai-das-ji-maharaj' },
+];
 
 const BTN =
   'relative inline-block rounded-full px-12 py-4 text-[1.35rem] leading-none text-ink-900 bg-[linear-gradient(180deg,#fad39a_0%,#f4a733_50%,#e8892b_100%)] shadow-[0_14px_34px_-10px_rgba(244,167,51,.7),inset_0_1px_0_rgba(255,255,255,.55)] [text-shadow:none] transition-transform duration-200 hover:-translate-y-0.5 active:scale-[.97] focus-visible:outline-saffron-300';
@@ -113,6 +121,8 @@ export default function Launch() {
             <circle cx={160} cy={7} r={3} fill="currentColor" stroke="none" />
           </svg>
           <h1 className="mt-4 font-sanskrit text-[clamp(2.5rem,7vw,4.75rem)] leading-[1.25] text-cream-50 [text-shadow:0_2px_4px_rgba(6,20,31,.9),0_2px_28px_rgba(244,167,51,.3)]">
+            {/* own line, so the name itself is never split across two */}
+            <span className="block">परम पूज्य</span>
             श्री गौर दास जी महाराज
           </h1>
           <p className="mt-1 text-[clamp(1.15rem,2vw,1.4rem)] text-[#eef4f8]">की आधिकारिक वेबसाइट</p>
@@ -124,20 +134,25 @@ export default function Launch() {
               className={`[grid-area:1/1] flex flex-col items-center transition-all duration-500 ${counting ? 'invisible -translate-y-3 scale-95 opacity-0' : ''}`}
             >
               <p className="max-w-[46rem] text-[clamp(1.05rem,1.9vw,1.3rem)] leading-[1.9] text-white">
-                यह श्री गौर दास जी महाराज की वेबसाइट है। यहाँ आपको महाराज जी से जुड़ी सारी जानकारी, आश्रम से जुड़ी जानकारी और श्री निताई दास जी
-                महाराज के बारे में जानकारी मिलेगी।
+                यह परम पूज्य श्री गौर दास जी महाराज की पावन वेबसाइट है। यहाँ आपको महाराज जी की सम्पूर्ण कथाएँ, आगामी कथा कार्यक्रम, एकादशी की
+                जानकारी, एकादशी कीर्तन के विवरण तथा परम पूज्य श्री निताई दास जी महाराज के बारे में जानकारी प्राप्त होगी।
               </p>
               <ul className="mt-6 flex flex-wrap justify-center gap-3">
-                {['श्री गौर दास जी महाराज', 'गौर कृपा धाम आश्रम', 'श्री निताई दास जी महाराज'].map((t) => (
-                  <li key={t} className="rounded-full border border-saffron-400/60 bg-ink-900/80 px-4 py-1.5 text-[1.02rem] text-cream-50">
-                    {t}
+                {SECTIONS.map(({ label, to }) => (
+                  <li key={to}>
+                    <Link
+                      to={to}
+                      className="block rounded-full border border-saffron-400/60 bg-ink-900/80 px-4 py-1.5 text-[1.02rem] text-cream-50 transition-colors hover:border-saffron-300 hover:bg-saffron-500/20 focus-visible:outline-saffron-300"
+                    >
+                      {label}
+                    </Link>
                   </li>
                 ))}
               </ul>
               <p className="mt-7 text-[1.2rem] text-saffron-300">श्री बद्रीनाथ धाम कथा में शुभारंभ</p>
               <button type="button" onClick={start} className={`mt-5 ${BTN}`}>
                 <span aria-hidden className="absolute -inset-2 rounded-full border-2 border-saffron-300/60 motion-safe:animate-[pulseRing_2.4s_ease-out_infinite]" />
-                लॉन्च करें
+                प्रवेश करें
               </button>
             </div>
 
