@@ -149,7 +149,6 @@ export default function Launch() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-7 text-[1.2rem] text-saffron-300">श्री बद्रीनाथ धाम कथा में शुभारंभ</p>
               <button type="button" onClick={start} className={`mt-5 ${BTN}`}>
                 <span aria-hidden className="absolute -inset-2 rounded-full border-2 border-saffron-300/60 motion-safe:animate-[pulseRing_2.4s_ease-out_infinite]" />
                 प्रवेश करें
