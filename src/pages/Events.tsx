@@ -49,7 +49,7 @@ export default function Events() {
           <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl text-white leading-tight text-balance mb-3">
             Missed a katha?
           </h2>
-          <p className="text-lg text-cream-200 mb-6 max-w-2xl mx-auto">Watch the recordings of Maharaj Ji’s kathas, day by day.</p>
+          <p className="text-lg text-cream-200 mb-6 max-w-2xl mx-auto">Watch the recordings of Maharaj Ji’s kathas.</p>
           <Link to="/all-kathas" className="btn-saffron">
             Watch Kathas <ArrowRight className="w-4 h-4" />
           </Link>

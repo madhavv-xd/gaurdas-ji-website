@@ -19,7 +19,7 @@ export default function Kathas() {
       <PageHero
         breadcrumb="Our Katha's"
         title="Join All Kathas"
-        subtitle="Recordings of Shri Gaurdas Ji Maharaj’s kathas, from his YouTube channel."
+        subtitle="Recordings of Shri Gaurdas Ji Maharaj’s kathas."
         image={IMAGES.kathaBanner}
       />
 

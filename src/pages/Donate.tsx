@@ -8,8 +8,8 @@ export default function Donate() {
     <div>
       <PageHero
         breadcrumb="Donate Us"
-        title="Support Our Cause"
-        subtitle="Your contributions help us in our mission to spread the message of katha. Scan the QR code below to donate securely."
+        title="Support the Ashram & Naam Prachar Seva"
+        subtitle="Your contributions help us in the seva of the ashram and Hari Naam Prachar Seva."
         image={IMAGES.heroGaurdasji}
       />
 
@@ -18,21 +18,7 @@ export default function Donate() {
           <DonatePanel />
         </div>
 
-        <div className="text-center mt-14 px-[22px]">
-          <p className="font-semibold text-ink-800 mb-4">Share with your friends and family</p>
-          <div className="flex justify-center gap-3">
-            {[
-              { href: SITE.social.facebook, label: 'Facebook', Icon: Facebook },
-              { href: SITE.social.twitter, label: 'X (Twitter)', Icon: Twitter },
-              { href: SITE.social.instagram, label: 'Instagram', Icon: Instagram },
-              { href: SITE.social.youtube, label: 'YouTube', Icon: Youtube },
-            ].map(({ href, label, Icon }) => (
-              <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} className="w-11 h-11 rounded-full bg-brand text-white hover:bg-saffron-500 flex items-center justify-center transition-colors">
-                <Icon className="w-5 h-5" />
-              </a>
-            ))}
-          </div>
-        </div>
+        
       </section>
     </div>
   );

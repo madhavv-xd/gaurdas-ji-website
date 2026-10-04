@@ -334,7 +334,7 @@ function HomeKathas() {
   return (
     <section className="py-10 sm:py-14 bg-cream-100">
       <div className="max-w-[1200px] mx-auto px-[22px]">
-        <SectionHeading eyebrow="Watch and listen" title="Shri Gaurdas Ji Maharaj Kathas" description="Recordings of Maharaj Ji’s kathas, day by day." />
+        <SectionHeading eyebrow="Watch and listen" title="Shri Gaurdas Ji Maharaj Kathas" description="Recordings of Maharaj Ji’s kathas." />
         {lists ? (
           <CardCarousel label="Kathas">
             {lists.slice(0, 6).map((p) => (
@@ -464,15 +464,15 @@ export default function Home() {
         <div className="max-w-[1000px] mx-auto px-[22px] grid md:grid-cols-[auto_1fr] gap-10 items-center">
           <img src={IMAGES.qr} alt="Donation QR code" className="w-52 sm:w-60 mx-auto rounded-[18px] bg-white p-3 shadow-lift" data-reveal />
           <div data-reveal style={d(120)}>
-            <p className="eyebrow !text-white/90">Support Our Cause</p>
-            <h2 className="text-[clamp(1.9rem,3.4vw,2.6rem)] leading-tight mt-1.5 mb-3">Your contribution spreads the message of katha</h2>
+            <p className="eyebrow !text-white/90">Support the Ashram & Naam Prachar Seva</p>
+            <h2 className="text-[clamp(1.9rem,3.4vw,2.6rem)] leading-tight mt-1.5 mb-3">Your contributions help us in the seva of the ashram and Hari Naam Prachar Seva.</h2>
             <p className="opacity-95 mb-5">Scan the QR code with any UPI app, or transfer to the trust’s bank account.</p>
             <p className="flex items-start gap-2 text-sm mb-6">
               <Landmark className="w-4 h-4 mt-0.5 flex-none" />
               <span>{BANK.name} · A/c {BANK.account} · IFSC {BANK.ifsc}</span>
             </p>
             <Link to="/donate-us" className="btn-ink">
-              <Heart className="w-4 h-4" fill="currentColor" /> Donate Details
+              <Heart className="w-4 h-4" fill="currentColor" /> Donate
             </Link>
           </div>
         </div>
