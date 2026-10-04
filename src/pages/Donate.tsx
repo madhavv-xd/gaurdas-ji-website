@@ -1,7 +1,6 @@
-import { Youtube, Facebook, Instagram, Twitter } from 'lucide-react';
 import PageHero from '@/components/PageHero';
 import DonatePanel from '@/components/DonatePanel';
-import { IMAGES, SITE } from '@/data/content';
+import { IMAGES } from '@/data/content';
 
 export default function Donate() {
   return (
