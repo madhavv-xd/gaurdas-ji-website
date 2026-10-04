@@ -30,17 +30,17 @@ import {
   BANK,
   ABOUT,
   CATEGORIES,
-  KATHAS,
   BHAJANS,
   EKADASHI_SHEET_URL,
   YT_LIVE_URL,
   mapsDir,
+  UPCOMING_KATHAS,
 } from '@/data/content';
 
 // stagger delay for [data-reveal] items (read by .reveal in index.css)
 const d = (ms: number) => ({ '--d': `${ms}ms` }) as CSSProperties;
 
-const upcoming = KATHAS.filter((k) => k.status === 'upcoming');
+const upcoming = UPCOMING_KATHAS;
 const categoryName = (id: number) => CATEGORIES.find((c) => c.id === id)?.name ?? '';
 const aboutIntro = (ABOUT.html.match(/<p>[\s\S]*?<\/p>/g) ?? []).slice(0, 2).join('');
 
@@ -104,7 +104,7 @@ const slides = (bhajans: number): Slide[] => [
     secondary: { label: 'Donate', to: '/donate-us' },
   },
   ...upcoming.slice(0, 1).map((k) => ({
-    image: IMAGES.heroKatha,
+    image: IMAGES.heroKathaBanner,
     tint: 'rgba(46,20,8,.88),rgba(90,45,15,.4) 55%,rgba(50,24,10,.12)',
     badge: `Upcoming · ${k.dates}`,
     eyebrow: 'Upcoming Katha',
@@ -114,7 +114,7 @@ const slides = (bhajans: number): Slide[] => [
     secondary: { label: 'All Events', to: '/events' },
   })),
   {
-    image: IMAGES.gaurdasji3,
+    image: IMAGES.heroBhajanBanner,
     tint: 'rgba(48,12,34,.9),rgba(120,40,80,.4) 55%,rgba(48,12,34,.12)',
     eyebrow: 'Bhajan & Kirtan',
     title: 'Listen to Maharaj Ji’s Bhajans',

@@ -224,6 +224,19 @@ export function PosterCard({ to, image, badge, transitionName, center, children 
   );
 }
 
+// Gold-trimmed arch top of a jharokha frame; sits on a `bg-white border border-t-0 border-gold` body
+export const JharokhaCrown = () => (
+  <svg viewBox="0 0 300 96" aria-hidden className="block w-full h-auto -mb-px overflow-visible">
+    <path d={`${CROWN}Z`} className="fill-white" />
+    <path d={CROWN} fill="none" className="stroke-gold" vectorEffect="non-scaling-stroke" />
+    <g className="fill-gold">
+      <circle cx="150" cy="44" r="5" />
+      <circle cx="138" cy="52" r="3" />
+      <circle cx="162" cy="52" r="3" />
+    </g>
+  </svg>
+);
+
 // Ivory card shaped like a jharokha: gold-trimmed arch top, the whole 16:9 picture (a YouTube thumbnail), then badge and text below it.
 export function JharokhaCard({ to, image, badge, transitionName, center, children }: CardProps) {
   return (
@@ -232,15 +245,7 @@ export function JharokhaCard({ to, image, badge, transitionName, center, childre
       viewTransition
       className="group block rounded-[20px] drop-shadow-[0_16px_24px_rgba(16,43,61,.22)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-saffron-400"
     >
-      <svg viewBox="0 0 300 96" aria-hidden className="block w-full h-auto -mb-px overflow-visible">
-        <path d={`${CROWN}Z`} className="fill-white" />
-        <path d={CROWN} fill="none" className="stroke-gold" vectorEffect="non-scaling-stroke" />
-        <g className="fill-gold">
-          <circle cx="150" cy="44" r="5" />
-          <circle cx="138" cy="52" r="3" />
-          <circle cx="162" cy="52" r="3" />
-        </g>
-      </svg>
+      <JharokhaCrown />
       <div className="bg-white border border-t-0 border-gold rounded-b-[20px] px-3.5 pb-4 sm:px-5 sm:pb-6 text-center">
         <div className="relative aspect-video overflow-hidden rounded-[10px] bg-cream-200">
           <Picture image={image} transitionName={transitionName} />

@@ -19,7 +19,7 @@ export default function NitaiDas() {
       <PageHero
         breadcrumb="Shri Nitai Das Ji Maharaj"
         title="Shri Nitai Das Ji Maharaj"
-        subtitle="Katha recordings by Shri Nitai Das Ji Maharaj."
+        subtitle=""
         image={IMAGES.kathaPortrait}
       />
       <section aria-labelledby="nitai-follow" className="bg-white border-b border-gold/25">
@@ -56,7 +56,7 @@ export default function NitaiDas() {
       </section>
       <section className="py-10 sm:py-14 bg-white">
         <div className="max-w-[1200px] mx-auto px-[22px]">
-          <SectionHeading title="About Shri Nitai Das Ji Maharaj" />
+          <SectionHeading title="श्री निताई दास जी महाराज" description="बाल व्यास" />
           <div className="max-w-[70ch] mx-auto space-y-4 font-sanskrit text-ink-600 text-[1.05rem]">
             {NITAI_ABOUT.map((p) => <p key={p}>{p}</p>)}
           </div>

@@ -27,5 +27,5 @@ Tailwind theme in `tailwind.config.js` uses custom palettes: `saffron`/`gold` (i
 ## Notes
 
 - `@supabase/supabase-js` is a dependency but is not used anywhere yet; there is no backend and no `.env`.
-- The Contact form (`src/pages/Contact.tsx`) only toggles a local "submitted" state — it does not send anything.
+- The Contact form (`src/pages/Contact.tsx`) POSTs `{action:'contact', …}` to `EKADASHI_SHEET_URL`; `contactMail()` in `apps-script/ekadashi-kirtan.gs` emails it via `MailApp`.
 - `.bolt/prompt` holds the template's design guidance: avoid cookie-cutter designs, use `lucide-react` for icons, and don't add UI/icon packages unless necessary.

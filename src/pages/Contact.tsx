@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Mail, Phone, MapPin, Send, Heart, Youtube, Facebook, Instagram, MessageCircle, Navigation } from 'lucide-react';
 import PageHero from '@/components/PageHero';
-import { SITE, IMAGES, mapsDir } from '@/data/content';
+import { SITE, IMAGES, mapsDir, EKADASHI_SHEET_URL } from '@/data/content';
 
 type Form = { name: string; email: string; phone: string; message: string };
 const EMPTY: Form = { name: '', email: '', phone: '', message: '' };
@@ -11,14 +11,15 @@ function validate(f: Form) {
   if (!f.name.trim()) e.name = 'Enter your name.';
   if (!/^\S+@\S+\.\S+$/.test(f.email)) e.email = 'Enter an email address like name@example.com.';
   if (!/^[+\d][\d\s-]{6,14}$/.test(f.phone.trim())) e.phone = 'Enter a phone number using digits only.';
-  if (f.message.trim().length < 5) e.message = 'Write a short message.';
+  if (!f.message.trim()) e.message = 'Enter your message.';
   return e;
 }
 
 export default function Contact() {
   const [form, setForm] = useState<Form>(EMPTY);
   const [errors, setErrors] = useState<ReturnType<typeof validate>>({});
-  const [sent, setSent] = useState(false);
+  // '' | 'sending' | 'sent' | an error message
+  const [status, setStatus] = useState('');
 
   const field = (k: keyof Form) => ({
     id: `c-${k}`,
@@ -34,18 +35,27 @@ export default function Contact() {
   const err = (k: keyof Form) =>
     errors[k] && <p id={`c-${k}-err`} className="mt-1.5 text-sm text-red-700">{errors[k]}</p>;
 
-  // ponytail: no backend in this build; hands off to the visitor's mail app. POST to api.gaurdasjimaharaj.in/api/v1/create to send server-side.
-  const submit = (e: FormEvent) => {
+  // Sent by contactMail() in apps-script/ekadashi-kirtan.gs, which emails it to the ashram.
+  const submit = async (e: FormEvent) => {
     e.preventDefault();
+    if (status === 'sending') return;
     const errs = validate(form);
     setErrors(errs);
     if (Object.keys(errs).length) {
       document.getElementById(`c-${Object.keys(errs)[0]}`)?.focus();
       return;
     }
-    const body = `${form.message}\n\n${form.name}\n${form.email}\n${form.phone}`;
-    window.location.href = `mailto:${SITE.email}?subject=${encodeURIComponent(`Website message from ${form.name}`)}&body=${encodeURIComponent(body)}`;
-    setSent(true);
+    setStatus('sending');
+    try {
+      // text/plain keeps this a "simple" request, so Apps Script needs no CORS preflight.
+      const res = await fetch(EKADASHI_SHEET_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'contact', ...form }) });
+      const j = await res.json();
+      if (!j.ok) throw new Error(j.error);
+      setForm(EMPTY);
+      setStatus('sent');
+    } catch (err) {
+      setStatus((err instanceof Error && err.message) || `Could not send. Check your connection, or email us at ${SITE.email}.`);
+    }
   };
 
   return (
@@ -145,12 +155,12 @@ export default function Contact() {
                     <textarea rows={5} className="field resize-none" placeholder="How can we help you?" {...field('message')} />
                     {err('message')}
                   </div>
-                  <button type="submit" className="btn-saffron w-full">
+                  <button type="submit" disabled={status === 'sending'} className="btn-saffron w-full disabled:opacity-60">
                     <Send className="w-4 h-4" />
-                    Send Message
+                    {status === 'sending' ? 'Sending…' : 'Send Message'}
                   </button>
-                  <p className="text-xs text-ink-400 text-center" aria-live="polite">
-                    {sent ? 'Your email app should open with the message ready. Press send there to deliver it.' : 'Opens your email app with the message ready to send.'}
+                  <p className={`text-sm text-center ${status === 'sent' ? 'text-forest-700' : 'text-red-700'}`} aria-live="polite">
+                    {status === 'sent' ? 'Thank you! Your message has been sent. We’ll get back to you soon.' : status === 'sending' ? '' : status}
                   </p>
                 </form>
               </div>

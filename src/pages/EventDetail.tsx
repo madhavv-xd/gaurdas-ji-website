@@ -5,7 +5,7 @@ import PageHero from '@/components/PageHero';
 import SectionHeading from '@/components/SectionHeading';
 import VideoGallery from '@/components/VideoGallery';
 import NotFound from '@/pages/NotFound';
-import { CATEGORIES, KATHAS, VIDEOS, IMAGES, mapsDir, type Katha } from '@/data/content';
+import { KATHAS, VIDEOS, IMAGES, mapsDir, isUpcoming, type Katha } from '@/data/content';
 
 // "21 July 2026 - 23 January 2027" → Google Calendar all-day event link (end date is exclusive)
 function calendarLink(k: Katha) {
@@ -23,9 +23,8 @@ export default function EventDetail() {
   const katha = KATHAS.find((k) => String(k.id) === id);
   if (!katha) return <NotFound />;
 
-  const category = CATEGORIES.find((c) => c.id === katha.categoryId);
   const videos = VIDEOS.filter((v) => v.kathaId === katha.id);
-  const upcoming = katha.status === 'upcoming';
+  const upcoming = isUpcoming(katha);
   const cal = upcoming ? calendarLink(katha) : null;
 
   // native share sheet on phones, copy link elsewhere
@@ -40,9 +39,10 @@ export default function EventDetail() {
   return (
     <div>
       <PageHero
-        breadcrumb={category?.name ?? 'Event'}
+        // back to the list this event is found in; the eyebrow stays English, since its letter-spacing breaks Devanagari
+        breadcrumb={upcoming ? 'Upcoming Katha' : 'Katha'}
         title={katha.name}
-        crumbs={category ? [{ label: category.name, to: `/katha-details/${category.id}` }] : []}
+        crumbs={[upcoming ? { label: 'Upcoming Kathas', to: '/events' } : { label: 'All Kathas', to: '/all-kathas' }]}
         image={IMAGES.heroKatha}
       />
 
@@ -83,22 +83,14 @@ export default function EventDetail() {
         </div>
       </section>
 
-      <section className="py-10 sm:py-14 bg-cream-100">
-        <div className="max-w-[1200px] mx-auto px-[22px]">
-          {videos.length > 0 ? (
-            <>
-              <SectionHeading eyebrow="Events" title={`Videos of ${katha.name}`} />
-              <VideoGallery items={videos.map((v) => ({ id: v.id, title: v.name, yt: v.yt }))} />
-            </>
-          ) : (
-            <SectionHeading
-              eyebrow="Events"
-              title={upcoming ? 'This event has not started yet' : 'No videos for this event yet'}
-              description={upcoming ? 'Videos will be added here once the event begins.' : undefined}
-            />
-          )}
-        </div>
-      </section>
+      {videos.length > 0 && (
+        <section className="py-10 sm:py-14 bg-cream-100">
+          <div className="max-w-[1200px] mx-auto px-[22px]">
+            <SectionHeading eyebrow="Events" title={`Videos of ${katha.name}`} />
+            <VideoGallery items={videos.map((v) => ({ id: v.id, title: v.name, yt: v.yt }))} />
+          </div>
+        </section>
+      )}
     </div>
   );
 }

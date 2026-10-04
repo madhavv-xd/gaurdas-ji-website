@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Calendar, Clock, MapPin, ArrowRight } from 'lucide-react';
-import { CATEGORIES, IMAGES, type Katha } from '@/data/content';
+import { CATEGORIES, IMAGES, isUpcoming, type Katha } from '@/data/content';
 
 export default function EventCard({ katha }: { katha: Katha }) {
   const category = CATEGORIES.find((c) => c.id === katha.categoryId);
@@ -14,10 +14,10 @@ export default function EventCard({ katha }: { katha: Katha }) {
         <img src={image} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700" />
         <span
           className={`absolute top-3 left-3 text-white text-[0.68rem] font-bold uppercase tracking-wider px-3 py-1 rounded-full ${
-            katha.status === 'upcoming' ? 'bg-saffron-500' : 'bg-brand'
+            isUpcoming(katha) ? 'bg-saffron-500' : 'bg-brand'
           }`}
         >
-          {katha.status === 'upcoming' ? 'Upcoming' : 'Completed'}
+          {isUpcoming(katha) ? 'Upcoming' : 'Completed'}
         </span>
       </div>
       <div className="px-3 pt-4 pb-3 flex flex-col flex-1">

@@ -4,6 +4,8 @@ import qr from '@/assets/scanner.png';
 import nitaiDas from '@/assets/nitaidas-ji.jpg';
 import heroGaurdasji from '@/assets/hero-gaurdasji.jpg';
 import heroKatha from '@/assets/hero-katha.jpg';
+import heroKathaBanner from '@/assets/hero-katha-banner.jpg';
+import heroBhajanBanner from '@/assets/hero-bhajan-banner.jpg';
 import gaurdasji1 from '@/assets/gaurDasji1.jpeg';
 import aboutBanner from '@/assets/about-banner.webp';
 import bhajanBanner from '@/assets/bhajan-banner.webp';
@@ -29,7 +31,17 @@ import guru4 from '@/assets/guru4_ramdas_babaji_3d.webp';
 import guru5 from '@/assets/guru5_gaurangdas_babaji_3d.webp';
 import guru6 from '@/assets/guru6_chandrashekhardas_babaji_3d.webp';
 
+import { KATHAS } from './live';
 export * from './live';
+
+// Upcoming until the katha's last day is over. The snapshot's status only changes on the next sync,
+// so the end date ("07 October 2026 - 13 October 2026") decides too. An unreadable date counts as upcoming.
+export const isUpcoming = (k: { status: string; dates: string }) =>
+  k.status === 'upcoming' && !(new Date(`${k.dates.split(/\s+-\s+/).pop()} 23:59:59`) < new Date());
+
+// soonest first (the API lists them newest-added first)
+const start = (k: { dates: string }) => +new Date(k.dates.split(/\s+-\s+/)[0]);
+export const UPCOMING_KATHAS = KATHAS.filter(isUpcoming).sort((a, b) => start(a) - start(b));
 
 export const SITE = {
   name: 'Shri Gaurdas Ji Maharaj',
@@ -62,6 +74,8 @@ export const IMAGES = {
   nitaiDas,
   heroGaurdasji,
   heroKatha,
+  heroKathaBanner,
+  heroBhajanBanner,
   gaurdasji1,
   aboutBanner,
   bhajanBanner,
@@ -113,13 +127,13 @@ export const mapsDir = (place: string) => `https://www.google.com/maps/dir/?api=
 
 // Web app URL of apps-script/ekadashi-kirtan.gs deployed on the ashram's own Google Sheet (…/exec).
 // GET returns the list; POST {action:'login'|'add'|'update'|'delete', id, password, …} is checked against the Users tab.
+// POST {action:'contact', name, email, phone, message} (no password) emails the Contact form.
 export const EKADASHI_SHEET_URL =
   'https://script.google.com/macros/s/AKfycbxvt4wQJOZhuQ4hi5uMDYEmvpKkALRPfMcJXBGa9x-ij1ewHYFOVq9Tn27mvCiMu5NvGA/exec';
 
 // Web app URL of apps-script/seva-hisab.gs (…/exec). Every call needs an admin id + password.
 export const SEVA_HISAB_URL =
   'https://script.google.com/macros/s/AKfycbxwN0szgLW7QFG_IzIoQ4ZOWhgw7i2KnDzlptwy8Ngm2beYIvoXOvKEPDQ4AC4fmY5-/exec';
-
 // "Follow" band on /shri-nitai-das-ji-maharaj
 export const NITAI_SOCIAL = [
   { label: 'YouTube', handle: '@nitaidas9756', action: 'Subscribe', href: 'https://www.youtube.com/@nitaidas9756/streams' },
@@ -128,7 +142,7 @@ export const NITAI_SOCIAL = [
 ] as const;
 
 export const NITAI_ABOUT = [
-  'आप परम पूज्य गुरुदेव श्री गौर दास जी महाराज एवं गुरु माँ श्रीमती विष्णु प्रिया दासी जी के सुपुत्र हैं। गर्भकाल में ही गुरु माँ को अनेक दिव्य अनुभूतियाँ हुईं और उन्हें श्री बाँके बिहारी जी के मंदिर के गर्भगृह के मार्जन का सौभाग्य प्राप्त हुआ।',
-  "मात्र 3-4 वर्ष की आयु से ही आपका रुझान सत्संग और कथा श्रवण की ओर रहा। 5 वर्ष की आयु में आपने बिना सिखाए स्वयं ही 'भक्त चरित्र' कहना प्रारंभ कर दिया। कथा, श्लोक और पद आपको एक बार सुनकर ही कंठस्थ हो जाते थे, और आप हारमोनियम बजाकर सुंदर पदों का गायन भी करने लगे।",
+  'श्री निताई दास जी महाराज का जन्म आश्विन कृष्ण अष्टमी, 1 अक्टूबर 2010 को श्री धाम वृंदावन में सेवा कुंज के निकट हुआ। आप परम पूज्य गुरुदेव श्री गौर दास जी महाराज एवं गुरु माँ श्रीमती विष्णु प्रिया दासी जी के सुपुत्र हैं। गर्भकाल में ही गुरु माँ को अनेक दिव्य अनुभूतियाँ हुईं और उन्हें श्री बाँके बिहारी जी के मंदिर के गर्भगृह के मार्जन का सौभाग्य प्राप्त हुआ।',
+  'मात्र 3-4 वर्ष की आयु से ही आपका रुझान सत्संग और कथा श्रवण की ओर रहा। 5 वर्ष की आयु में आपने बिना सिखाए स्वयं ही ‘भक्त चरित्र’ कहना प्रारंभ कर दिया। कथा, श्लोक और पद आपको एक बार सुनकर ही कंठस्थ हो जाते थे, और आप हारमोनियम बजाकर सुंदर पदों का गायन भी करने लगे।',
   'वेद, संस्कृत और श्रीमद्भागवत की विधिवत शिक्षा के साथ आप उस महान श्रीमद्भागवत परंपरा से जुड़े हैं, जो गदाधर भट्ट गोस्वामी जी से होते हुए परम पूज्य श्री अच्युत लाल भट्ट जी महाराज तक आई है। उन्हीं की कृपा से आपका तिलक हुआ और आप भागवत आसन पर विराजमान हुए। आपकी प्रथम श्रीमद्भागवत कथा 9 से 15 जनवरी 2026 तक हिंदी भवन, लोहिया नगर, गाज़ियाबाद में आयोजित हुई।',
 ];

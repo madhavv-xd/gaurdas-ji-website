@@ -6,9 +6,9 @@ import SearchField from '@/components/SearchField';
 import { useQueryParam } from '@/lib/useQueryParam';
 import { matches } from '@/lib/search';
 import EventCard from '@/components/EventCard';
-import { KATHAS, IMAGES } from '@/data/content';
+import { IMAGES, UPCOMING_KATHAS } from '@/data/content';
 
-const upcoming = KATHAS.filter((k) => k.status === 'upcoming');
+const upcoming = UPCOMING_KATHAS;
 
 export default function Events() {
   const [query, setQuery] = useQueryParam();
